@@ -15,8 +15,9 @@ typedef enum {
     SOUND_AMBIENT_FIRST = 1,
     SOUND_AMBIENT_EMPTY_LAND1 = 1,
     SOUND_AMBIENT_EMPTY_LAND2,
-    SOUND_AMBIENT_EMPTY_LAND3,
-    SOUND_AMBIENT_RIVER,
+    SOUND_AMBIENT_EMPTY_LAND3, // SOUND_AMBIENT_RIVER,
+    SOUND_AMBIENT_EMPTY_TERRAIN01, 
+    SOUND_AMBIENT_EMPTY_TERRAIN02, 
     SOUND_AMBIENT_MAX
 } sound_ambient_type;
 
@@ -79,7 +80,7 @@ static const char city_sound_files[SOUND_CITY_MAX][FILE_NAME_MAX] = {
     "wavs/school.wav",
     "wavs/academy.wav",
     "wavs/library.wav",
-    ASSETS_DIRECTORY "/Sounds/Prefect.wav", // "wavs/prefecture.wav",
+    ASSETS_DIRECTORY "/Sounds/Prefect.ogg", // "wavs/prefecture.wav",
     "wavs/fort1.wav",
     "wavs/tower1.wav",
     "wavs/tower2.wav", // WATCHTOWER
@@ -100,7 +101,7 @@ static const char city_sound_files[SOUND_CITY_MAX][FILE_NAME_MAX] = {
     "wavs/dock1.wav",
     "wavs/wharf1.wav",
     "wavs/palace.wav",
-    ASSETS_DIRECTORY "/Sounds/Engineer.wav", // "wavs/eng_post.wav",
+    ASSETS_DIRECTORY "/Sounds/Engineer.ogg", // "wavs/eng_post.wav",
     "wavs/senate.wav",
     "wavs/forum.wav",
     "wavs/resevoir.wav",
@@ -126,19 +127,22 @@ static const char city_sound_files[SOUND_CITY_MAX][FILE_NAME_MAX] = {
     "wavs/furn_workshop.wav",
     "wavs/pott_workshop.wav",
     "wavs/coin.wav",
-    "wavs/mission.wav",
-    ASSETS_DIRECTORY "/Sounds/Brickworks.wav",
-    ASSETS_DIRECTORY "/Sounds/Lighthouse.wav",
-    ASSETS_DIRECTORY "/Sounds/Ox.wav", // DEPOT
-    ASSETS_DIRECTORY "/Sounds/ConcreteMaker.wav",
+    ASSETS_DIRECTORY "/Sounds/MissionPost.ogg", // "wavs/mission.wav",
+    ASSETS_DIRECTORY "/Sounds/Brickworks.ogg",
+    ASSETS_DIRECTORY "/Sounds/Lighthouse.ogg",
+    ASSETS_DIRECTORY "/Sounds/Ox.ogg", // DEPOT
+    ASSETS_DIRECTORY "/Sounds/ConcreteMaker.ogg",
+    ASSETS_DIRECTORY "/Sounds/Engineer.ogg", // CONSTRUCTION_SITE
+    ASSETS_DIRECTORY "/Sounds/NativeHut.ogg",
 };
 
 static const char ambient_sound_files[SOUND_AMBIENT_MAX][FILE_NAME_MAX] = {
     "",
     "wavs/empty_land1.wav",
     "wavs/empty_land2.wav",
-    "wavs/empty_land3.wav",
-    "wavs/river.wav",
+    "wavs/empty_land3.wav", // "wavs/river.wav",
+    ASSETS_DIRECTORY "/Sounds/Terrain01.ogg",
+    ASSETS_DIRECTORY "/Sounds/Terrain02.ogg",
 };
 
 void sound_city_init(void)

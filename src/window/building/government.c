@@ -106,7 +106,7 @@ void window_building_draw_garden(building_info_context *c)
 void window_building_draw_plaza(building_info_context *c)
 {
     c->help_id = 80;
-    window_building_play_sound(c, ASSETS_DIRECTORY "/Sounds/Road.wav");
+    window_building_play_sound(c, ASSETS_DIRECTORY "/Sounds/Road.ogg");
     window_building_prepare_figure_list(c);
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(137, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);

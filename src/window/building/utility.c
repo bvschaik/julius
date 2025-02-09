@@ -74,7 +74,7 @@ void window_building_draw_engineers_post(building_info_context *c)
 {
     c->advisor_button = ADVISOR_CHIEF;
     c->help_id = 81;
-    window_building_play_sound(c, ASSETS_DIRECTORY "/Sounds/Engineer.wav");
+    window_building_play_sound(c, ASSETS_DIRECTORY "/Sounds/Engineer.ogg");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(104, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
 
@@ -112,7 +112,7 @@ void window_building_draw_prefect(building_info_context *c)
 {
     c->advisor_button = ADVISOR_CHIEF;
     c->help_id = 86;
-    window_building_play_sound(c, ASSETS_DIRECTORY "/Sounds/Prefect.wav");
+    window_building_play_sound(c, ASSETS_DIRECTORY "/Sounds/Prefect.ogg");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(88, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
 
@@ -169,7 +169,7 @@ static void draw_roadblock_orders_buttons(int x, int y, int focused)
 void window_building_draw_roadblock(building_info_context *c)
 {
     c->help_id = 0;
-    window_building_play_sound(c, ASSETS_DIRECTORY "/Sounds/Road.wav");
+    window_building_play_sound(c, ASSETS_DIRECTORY "/Sounds/Road.ogg");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(28, 115, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
     window_building_draw_description_at(c, 96, CUSTOM_TRANSLATION, TR_BUILDING_ROADBLOCK_DESC);
@@ -344,7 +344,7 @@ void window_building_draw_mission_post(building_info_context *c)
 {
     c->advisor_button = ADVISOR_EDUCATION;
     c->help_id = 8;
-    window_building_play_sound(c, "wavs/mission.wav");
+    window_building_play_sound(c, ASSETS_DIRECTORY "/Sounds/MissionPost.ogg");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(134, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
     if (!c->has_road_access) {
@@ -370,25 +370,25 @@ static void draw_native(building_info_context *c, int group_id)
 void window_building_draw_native_hut(building_info_context *c)
 {
     draw_native(c, 131);
-    window_building_play_sound(c, ASSETS_DIRECTORY "/Sounds/NativeHut.wav");
+    window_building_play_sound(c, ASSETS_DIRECTORY "/Sounds/NativeHut.ogg");
 }
 
 void window_building_draw_native_meeting(building_info_context *c)
 {
     draw_native(c, 132);
-    window_building_play_sound(c, ASSETS_DIRECTORY "/Sounds/NativeHut.wav");
+    window_building_play_sound(c, ASSETS_DIRECTORY "/Sounds/NativeHut.ogg");
 }
 
 void window_building_draw_native_crops(building_info_context *c)
 {
     draw_native(c, 133);
-    window_building_play_sound(c, "wavs/empty_land.wav");
+    window_building_play_sound(c, "wavs/wheat_farm.wav");
 }
 
 void window_building_draw_highway(building_info_context *c)
 {
     //c->help_id = 0;
-    //window_building_play_sound(c, "wavs/aquaduct.wav");
+    window_building_play_sound(c, ASSETS_DIRECTORY "/Sounds/Road.ogg");
     window_building_prepare_figure_list(c);
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(CUSTOM_TRANSLATION, TR_BUILDING_HIGHWAY, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);

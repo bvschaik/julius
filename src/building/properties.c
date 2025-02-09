@@ -523,6 +523,7 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
         .size = 1,
         .fire_proof = 1,
         .image_group = 183,
+        .sound_id = SOUND_CITY_NATIVE_HUT,
         .event_data.attr = "native_hut"
     },
     [BUILDING_NATIVE_MEETING] = {
@@ -530,6 +531,7 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
         .fire_proof = 1,
         .image_group = 183,
         .image_offset = 2,
+        .sound_id = SOUND_CITY_NATIVE_HUT,
         .event_data.attr = "native_meeting"
     },
     [BUILDING_RESERVOIR] = {
@@ -558,6 +560,7 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
         .fire_proof = 1,
         .image_group = 100,
         .event_data.attr = "native_crops",
+        .sound_id = SOUND_CITY_WHEAT_FARM,
         .event_data.key = TR_PARAMETER_VALUE_BUILDING_NATIVE_CROPS
     },
     [BUILDING_MILITARY_ACADEMY] = {

@@ -912,7 +912,7 @@ void window_building_draw_work_camp(building_info_context *c)
 
 void window_building_draw_architect_guild(building_info_context *c)
 {
-    window_building_play_sound(c, ASSETS_DIRECTORY "/Sounds/Engineer.wav");
+    window_building_play_sound(c, ASSETS_DIRECTORY "/Sounds/Engineer.ogg");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 138);
@@ -1202,7 +1202,7 @@ void window_building_draw_lighthouse(building_info_context *c)
     building *b = building_get(c->building_id);
     if (b->monument.phase == MONUMENT_FINISHED) {
         c->advisor_button = ADVISOR_TRADE;
-        window_building_play_sound(c, ASSETS_DIRECTORY "/Sounds/Lighthouse.wav");
+        window_building_play_sound(c, ASSETS_DIRECTORY "/Sounds/Lighthouse.ogg");
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
 
         image_draw(resource_get_data(RESOURCE_TIMBER)->image.icon, c->x_offset + 32, c->y_offset + 46,
