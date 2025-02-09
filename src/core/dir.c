@@ -125,6 +125,19 @@ static void move_left(char *str)
 static const char *get_case_corrected_file(const char *dir, const char *filepath)
 {
     static char corrected_filename[2 * FILE_NAME_MAX];
+    char backup[2 * FILE_NAME_MAX];
+    size_t backup_offset = 0;
+
+    // Prevent writing to the same buffer
+    if (filepath >= corrected_filename && filepath < corrected_filename + 2 * FILE_NAME_MAX) {
+        // File location already corrected, skip
+        if (!dir || !*dir) {
+            return filepath;
+        }
+        backup_offset = filepath - corrected_filename;
+        snprintf(backup, 2 * FILE_NAME_MAX - backup_offset, "%s", filepath);
+        filepath = backup;
+    }
 
     size_t dir_len = 0;
     size_t dir_skip = 0;
@@ -150,6 +163,9 @@ static const char *get_case_corrected_file(const char *dir, const char *filepath
     }
 
     if (!platform_file_manager_should_case_correct_file()) {
+        if (filepath == backup) {
+            snprintf(corrected_filename + backup_offset, 2 * FILE_NAME_MAX - backup_offset, "%s", backup);
+        }
         return 0;
     }
 
@@ -166,6 +182,9 @@ static const char *get_case_corrected_file(const char *dir, const char *filepath
         }
         *slash = 0;
         if (!correct_case(corrected_filename, &corrected_filename[path_offset], TYPE_DIR)) {
+            if (filepath == backup) {
+                snprintf(corrected_filename + backup_offset, 2 * FILE_NAME_MAX - backup_offset, "%s", backup);
+            }
             return 0;
         }
         char *path = slash + 1;
@@ -177,6 +196,9 @@ static const char *get_case_corrected_file(const char *dir, const char *filepath
         path_offset += strlen(&corrected_filename[path_offset]) + 1;
     }
     if (!correct_case(corrected_filename, &corrected_filename[path_offset], TYPE_FILE)) {
+        if (filepath == backup) {
+            snprintf(corrected_filename + backup_offset, 2 * FILE_NAME_MAX - backup_offset, "%s", backup);
+        }
         return 0;
     }
     corrected_filename[path_offset - 1] = '/';

@@ -41,7 +41,7 @@ static struct {
 #endif
 
 typedef struct {
-    const char *filename;
+    char filename[FILE_NAME_MAX];
     Mix_Chunk *chunk;
     time_millis last_played;
 } sound_channel;
@@ -160,7 +160,7 @@ static void stop_channel(int channel)
         Mix_FreeChunk(ch->chunk);
         ch->chunk = 0;
     }
-    ch->filename = 0;
+    ch->filename[0] = 0;
     ch->last_played = 0;
 }
 
@@ -231,7 +231,7 @@ void sound_device_init_channels(void)
     log_info("Loading audio files", 0, 0);
     for (int i = 0; i < data.total_channels; i++) {
         data.channels[i].chunk = 0;
-        data.channels[i].filename = 0;
+        data.channels[i].filename[0] = 0;
         data.channels[i].last_played = 0;
     }
     Mix_ChannelFinished(callback_for_audio_finished);
@@ -241,7 +241,7 @@ static int get_channel_for_filename(const char *filename, sound_type type)
 {
     for (int i = 0; i < sound_type_to_channels[type].total; i++) {
         int channel = i + sound_type_to_channels[type].start;
-        if (data.channels[channel].filename && strcmp(filename, data.channels[channel].filename) == 0) {
+        if (strcmp(filename, data.channels[channel].filename) == 0) {
             return channel;
         }
     }
@@ -385,7 +385,7 @@ int sound_device_play_file_on_channel_panned(const char *filename, sound_type ty
         if (!data.channels[channel].chunk) {
             return 0;
         }
-        data.channels[channel].filename = filename;
+        snprintf(data.channels[channel].filename, FILE_NAME_MAX, "%s", filename);
     }
     Mix_SetPanning(channel, left_pct * 255 / 100, right_pct * 255 / 100);
     Mix_VolumeChunk(data.channels[channel].chunk, percentage_to_volume(volume_pct));
