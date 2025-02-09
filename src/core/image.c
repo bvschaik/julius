@@ -1,6 +1,7 @@
 #include "image.h"
 
 #include "assets/assets.h"
+#include "building/building.h"
 #include "core/buffer.h"
 #include "core/file.h"
 #include "core/image_packer.h"
@@ -8,6 +9,8 @@
 #include "core/log.h"
 #include "graphics/font.h"
 #include "graphics/renderer.h"
+#include "map/image.h"
+#include "scenario/property.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -613,6 +616,40 @@ static void release_external_buffers(void)
     }
 }
 
+static void update_native_decoration_images(int old_climate, int new_climate)
+{
+    if (old_climate == new_climate) {
+        return;
+    }
+    int native_decoration_old_image_id;
+    switch (old_climate) {
+        case CLIMATE_NORTHERN:
+            native_decoration_old_image_id = assets_get_image_id("Terrain_Maps", "Native_Decoration_Northern_01");
+            break;
+        case CLIMATE_DESERT:
+            native_decoration_old_image_id = assets_get_image_id("Terrain_Maps", "Native_Decoration_Southern_01");
+            break;
+        default:
+            native_decoration_old_image_id = assets_get_image_id("Terrain_Maps", "Native_Decoration_Central_01");
+    }
+
+    int native_decoration_new_image_id;
+    switch (new_climate) {
+        case CLIMATE_NORTHERN:
+            native_decoration_new_image_id = assets_get_image_id("Terrain_Maps", "Native_Decoration_Northern_01");
+            break;
+        case CLIMATE_DESERT:
+            native_decoration_new_image_id = assets_get_image_id("Terrain_Maps", "Native_Decoration_Southern_01");
+            break;
+        default:
+            native_decoration_new_image_id = assets_get_image_id("Terrain_Maps", "Native_Decoration_Central_01");
+    }
+
+    for (building *b = building_first_of_type(BUILDING_NATIVE_DECORATION); b; b = b->next_of_type) {
+        map_image_set(b->grid_offset, native_decoration_new_image_id + map_image_at(b->grid_offset) - native_decoration_old_image_id);
+    }
+}
+
 int image_load_climate(int climate_id, int is_editor, int force_reload, int keep_atlas_buffers)
 {
     if (climate_id == data.current_climate && is_editor == data.is_editor && !force_reload &&
@@ -707,6 +744,9 @@ int image_load_climate(int climate_id, int is_editor, int force_reload, int keep
         int image_id = image_group(GROUP_BUILDING_FORT_LEGIONARY) + 155;
         data.main[image_id].width = 30;
     }
+
+    // Update native decoration alternative images after climate change.
+    update_native_decoration_images(data.current_climate, climate_id);
 
     data.current_climate = climate_id;
     data.is_editor = is_editor;

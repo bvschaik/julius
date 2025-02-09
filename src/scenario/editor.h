@@ -9,7 +9,7 @@ int scenario_editor_is_saved(void);
 void scenario_editor_set_as_saved(void);
 void scenario_editor_set_as_unsaved(void);
 
-void scenario_editor_set_native_images(int image_hut, int image_meeting, int image_crops);
+void scenario_editor_set_native_images(int image_hut, int image_meeting, int image_crops, int image_decoration);
 
 void scenario_editor_cycle_image(int forward);
 

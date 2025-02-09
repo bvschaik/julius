@@ -117,11 +117,12 @@ void scenario_editor_create(int map_size)
     scenario.random_events.min_wages = 5;
 }
 
-void scenario_editor_set_native_images(int image_hut, int image_meeting, int image_crops)
+void scenario_editor_set_native_images(int image_hut, int image_meeting, int image_crops, int image_decoration)
 {
     scenario.native_images.hut = image_hut;
     scenario.native_images.meeting = image_meeting;
     scenario.native_images.crops = image_crops;
+    scenario.native_images.decoration = image_decoration;
 }
 
 void scenario_editor_cycle_image(int forward)

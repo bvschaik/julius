@@ -1290,6 +1290,13 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
         .custom_asset.group = "Military",
         .custom_asset.id = "Armoury_OFF_C",
         .event_data.attr = "armoury"
+    },
+    [BUILDING_NATIVE_DECORATION] = {
+        .size = 1,
+        .fire_proof = 1,
+        .custom_asset.group = "Terrain_Maps",
+        .custom_asset.id = "Native_Decoration_Central_01",
+        .event_data.attr = "native_decoration",
     }
 };
 

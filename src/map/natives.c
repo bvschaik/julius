@@ -1,5 +1,6 @@
 #include "natives.h"
 
+#include "assets/assets.h"
 #include "building/building.h"
 #include "building/list.h"
 #include "building/properties.h"
@@ -18,6 +19,7 @@
 #include "map/random.h"
 #include "map/terrain.h"
 #include "scenario/data.h" // TODO remove this dependency
+#include "scenario/property.h"
 
 static void mark_native_land(int x, int y, int size, int radius)
 {
@@ -43,6 +45,7 @@ static int has_building_on_native_land(int x, int y, int size, int radius)
                     type != BUILDING_NATIVE_HUT &&
                     type != BUILDING_NATIVE_MEETING &&
                     type != BUILDING_NATIVE_CROPS &&
+                    type != BUILDING_NATIVE_DECORATION &&
                     (!building_type_is_roadblock(type) || type == BUILDING_PALISADE_GATE ||
                         type == BUILDING_TRIUMPHAL_ARCH || type == BUILDING_GATEHOUSE)) {
                     return 1;
@@ -75,12 +78,25 @@ static void determine_meeting_center(void)
     }
 }
 
+int native_decoration_get_image_id() {
+    switch (scenario_property_climate()) {
+        case CLIMATE_NORTHERN:
+            return assets_get_image_id("Terrain_Maps", "Native_Decoration_Northern_01");
+        case CLIMATE_DESERT:
+            return assets_get_image_id("Terrain_Maps", "Native_Decoration_Southern_01");
+        default:
+            return assets_get_image_id("Terrain_Maps", "Native_Decoration_Central_01");
+    }
+}
+
 void map_natives_init(void)
 {
     int image_hut = scenario.native_images.hut;
     int image_meeting = scenario.native_images.meeting;
     int image_crops = scenario.native_images.crops;
+    int image_decoration = scenario.native_images.decoration;
     int native_image = image_group(GROUP_BUILDING_NATIVE);
+    int native_decoration_image = native_decoration_get_image_id();
     int grid_offset = map_data.start_offset;
     for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
         for (int x = 0; x < map_data.width; x++, grid_offset++) {
@@ -106,6 +122,9 @@ void map_natives_init(void)
             } else if (image_id == image_crops) {
                 type = BUILDING_NATIVE_CROPS;
                 map_image_set(grid_offset, image_group(GROUP_BUILDING_FARM_CROPS) + random_bit);
+            } else if (image_id == image_decoration) {
+                type = BUILDING_NATIVE_DECORATION;
+                map_image_set(grid_offset, native_decoration_image);
             } else { //unknown building
                 map_building_tiles_remove(0, x, y);
                 continue;
@@ -141,7 +160,9 @@ void map_natives_init_editor(void)
     int image_hut = scenario.native_images.hut;
     int image_meeting = scenario.native_images.meeting;
     int image_crops = scenario.native_images.crops;
+    int image_decoration = scenario.native_images.decoration;
     int native_image = image_group(GROUP_EDITOR_BUILDING_NATIVE);
+    int native_decoration_image = native_decoration_get_image_id();
     int grid_offset = map_data.start_offset;
     for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
         for (int x = 0; x < map_data.width; x++, grid_offset++) {
@@ -166,6 +187,9 @@ void map_natives_init_editor(void)
             } else if (image_id == image_crops) {
                 type = BUILDING_NATIVE_CROPS;
                 map_image_set(grid_offset, image_group(GROUP_EDITOR_BUILDING_CROPS));
+            } else if (image_id == image_decoration) {
+                type = BUILDING_NATIVE_DECORATION;
+                map_image_set(grid_offset, native_decoration_image);
             } else { //unknown building
                 map_building_tiles_remove(0, x, y);
                 continue;
@@ -191,7 +215,7 @@ void map_natives_check_land(int update_behavior)
 
     building_type native_buildings[] = { BUILDING_NATIVE_HUT, BUILDING_NATIVE_MEETING };
 
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < sizeof(native_buildings) / sizeof(native_buildings[0]); i++) {
         building_type type = native_buildings[i];
         int size = building_properties_for_type(type)->size;
         int radius = size * 3;

@@ -154,7 +154,19 @@ static void calculate_buffer_offsets(int scenario_version)
     next_start_offset = buffer_offsets.invasion_points + MAX_INVASION_POINTS * 4;
 
     buffer_offsets.misc = next_start_offset;
-    next_start_offset = buffer_offsets.misc + 51;
+    next_start_offset = buffer_offsets.misc + 24;
+
+    if (scenario_version > SCENARIO_LAST_NO_NATIVE_EXPANSION) {
+        buffer_offsets.size = next_start_offset;
+        next_start_offset = buffer_offsets.size + sizeof(int32_t);
+    }
+
+    // Native images offset
+    buffer_offsets.misc = next_start_offset;
+    next_start_offset = buffer_offsets.misc + 12;
+
+    buffer_offsets.misc = next_start_offset;
+    next_start_offset = buffer_offsets.misc + 15;
 
     if (scenario_version > SCENARIO_LAST_NO_CUSTOM_MESSAGES) {
         buffer_offsets.introduction = next_start_offset;
@@ -187,6 +199,8 @@ int scenario_get_state_buffer_size_by_savegame_version(int savegame_version)
         calculate_buffer_offsets(SCENARIO_LAST_NO_CUSTOM_VARIABLES);
     } else if (savegame_version <= SAVE_GAME_LAST_WRONG_SCENARIO_END_OFFSET) {
         calculate_buffer_offsets(SCENARIO_LAST_WRONG_END_OFFSET);
+    } else if (savegame_version <= SAVE_GAME_LAST_NO_NATIVE_EXPANSION) {
+        calculate_buffer_offsets(SCENARIO_LAST_NO_NATIVE_EXPANSION);
     } else if (savegame_version <= SAVE_GAME_LAST_STATIC_SCENARIO_ORIGINAL_DATA) {
         calculate_buffer_offsets(SCENARIO_LAST_STATIC_ORIGINAL_DATA);
     } else {
@@ -316,6 +330,7 @@ void scenario_save_state(buffer *buf)
     buffer_write_i32(buf, scenario.win_criteria.milestone50_year);
     buffer_write_i32(buf, scenario.win_criteria.milestone75_year);
 
+    buffer_write_i32(buf, scenario.native_images.decoration);
     buffer_write_i32(buf, scenario.native_images.hut);
     buffer_write_i32(buf, scenario.native_images.meeting);
     buffer_write_i32(buf, scenario.native_images.crops);
@@ -485,6 +500,10 @@ void scenario_load_state(buffer *buf, int version)
     scenario.native_images.hut = buffer_read_i32(buf);
     scenario.native_images.meeting = buffer_read_i32(buf);
     scenario.native_images.crops = buffer_read_i32(buf);
+
+    if (version > SCENARIO_LAST_NO_NATIVE_EXPANSION) {
+        scenario.native_images.decoration = buffer_read_i32(buf);
+    }
 
     scenario.climate = buffer_read_u8(buf);
     scenario.flotsam_enabled = buffer_read_u8(buf);

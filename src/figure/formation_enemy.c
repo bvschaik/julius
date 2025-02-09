@@ -318,6 +318,7 @@ static void set_native_target_building(formation *m)
             case BUILDING_NATIVE_HUT:
             case BUILDING_NATIVE_CROPS:
             case BUILDING_NATIVE_MEETING:
+            case BUILDING_NATIVE_DECORATION:
             case BUILDING_WAREHOUSE:
             case BUILDING_FORT:
             case BUILDING_FORT_GROUND:

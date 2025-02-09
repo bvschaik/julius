@@ -1,5 +1,6 @@
 #include "tool.h"
 
+#include "assets/assets.h"
 #include "building/construction_routed.h"
 #include "core/image.h"
 #include "core/image_group_editor.h"
@@ -354,6 +355,20 @@ static void place_building(const map_tile *tile)
             image_id = image_group(GROUP_EDITOR_BUILDING_CROPS);
             size = 1;
             break;
+        case TOOL_NATIVE_DECORATION:
+            type = BUILDING_NATIVE_DECORATION;
+            switch (scenario_property_climate()) {
+                case CLIMATE_NORTHERN:
+                    image_id = assets_get_image_id("Terrain_Maps", "Native_Decoration_Northern_01");
+                    break;
+                case CLIMATE_DESERT:
+                    image_id = assets_get_image_id("Terrain_Maps", "Native_Decoration_Southern_01");
+                    break;
+                default:
+                    image_id = assets_get_image_id("Terrain_Maps", "Native_Decoration_Central_01");
+            }
+            size = 1;
+            break;
         default:
             return;
     }
@@ -446,6 +461,7 @@ void editor_tool_end_use(const map_tile *tile)
         case TOOL_NATIVE_CENTER:
         case TOOL_NATIVE_FIELD:
         case TOOL_NATIVE_HUT:
+        case TOOL_NATIVE_DECORATION:
             place_building(tile);
             break;
         case TOOL_RAISE_LAND:

@@ -31,6 +31,7 @@ void window_building_draw_mission_post(building_info_context *c);
 void window_building_draw_native_hut(building_info_context *c);
 void window_building_draw_native_meeting(building_info_context *c);
 void window_building_draw_native_crops(building_info_context *c);
+void window_building_draw_native_decoration(building_info_context *c);
 
 void window_building_draw_highway(building_info_context *c);
 

@@ -1,5 +1,6 @@
 #include "map_editor_tool.h"
 
+#include "assets/assets.h"
 #include "building/properties.h"
 #include "core/image_group_editor.h"
 #include "editor/tool.h"
@@ -72,6 +73,17 @@ static void draw_building(const map_tile *tile, int x_view, int y_view, building
         int image_id;
         if (type == BUILDING_NATIVE_CROPS) {
             image_id = image_group(GROUP_EDITOR_BUILDING_CROPS);
+        } else if (type == BUILDING_NATIVE_DECORATION) {
+            switch (scenario_property_climate()) {
+                case CLIMATE_NORTHERN:
+                    image_id = assets_get_image_id("Terrain_Maps", "Native_Decoration_Northern_01");
+                    break;
+                case CLIMATE_DESERT:
+                    image_id = assets_get_image_id("Terrain_Maps", "Native_Decoration_Southern_01");
+                    break;
+                default:
+                    image_id = assets_get_image_id("Terrain_Maps", "Native_Decoration_Central_01");
+            };
         } else {
             image_id = image_group(props->image_group) + props->image_offset;
         }
@@ -150,6 +162,9 @@ void map_editor_tool_draw(const map_tile *tile)
             break;
         case TOOL_NATIVE_FIELD:
             draw_building(tile, x, y, BUILDING_NATIVE_CROPS);
+            break;
+        case TOOL_NATIVE_DECORATION:
+            draw_building(tile, x, y, BUILDING_NATIVE_DECORATION);
             break;
 
         case TOOL_EARTHQUAKE_POINT:

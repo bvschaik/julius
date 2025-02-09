@@ -156,6 +156,9 @@ static void initialize_scenario_data(const uint8_t *scenario_name)
     map_tiles_update_all_walls();
     map_tiles_update_all_aqueducts(0);
 
+    // Load climate before to prevent climate related images blinking
+    image_load_climate(scenario_property_climate(), 0, 0, 0);
+
     map_natives_init();
 
     city_view_init();
@@ -191,7 +194,6 @@ static void initialize_scenario_data(const uint8_t *scenario_name)
     scenario_demand_change_init();
     scenario_price_change_init();
     building_menu_update();
-    image_load_climate(scenario_property_climate(), 0, 0, 0);
     image_load_enemy(scenario_property_enemy());
 
     city_data_init_scenario();

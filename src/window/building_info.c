@@ -124,6 +124,7 @@ static int get_height_id(void)
             case BUILDING_NATIVE_HUT:
             case BUILDING_NATIVE_MEETING:
             case BUILDING_NATIVE_CROPS:
+            case BUILDING_NATIVE_DECORATION:
             case BUILDING_MISSION_POST:
             case BUILDING_PREFECTURE:
             case BUILDING_ENGINEERS_POST:
@@ -730,6 +731,8 @@ static void draw_background(void)
             window_building_draw_native_meeting(&context);
         } else if (btype == BUILDING_NATIVE_CROPS) {
             window_building_draw_native_crops(&context);
+        } else if (btype == BUILDING_NATIVE_DECORATION) {
+            window_building_draw_native_decoration(&context);
         } else if (btype == BUILDING_MISSION_POST) {
             window_building_draw_mission_post(&context);
         } else if (btype == BUILDING_WATCHTOWER) {

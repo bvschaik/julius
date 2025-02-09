@@ -126,6 +126,7 @@ extern struct scenario_t {
         int hut;
         int meeting;
         int crops;
+        int decoration;
     } native_images;
 
     struct { // used to be stored in the settings file

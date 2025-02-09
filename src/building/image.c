@@ -567,6 +567,15 @@ int building_image_get(const building *b)
             return image_group(GROUP_BUILDING_NATIVE) + 2;
         case BUILDING_NATIVE_CROPS:
             return image_group(GROUP_BUILDING_FARM_CROPS);
+        case BUILDING_NATIVE_DECORATION:
+            switch (scenario_property_climate()) {
+                case CLIMATE_NORTHERN:
+                    return assets_get_image_id("Terrain_Maps", "Native_Decoration_Northern_01");
+                case CLIMATE_DESERT:
+                    return assets_get_image_id("Terrain_Maps", "Native_Decoration_Southern_01");
+                default:
+                    return assets_get_image_id("Terrain_Maps", "Native_Decoration_Central_01");
+            }
         case BUILDING_GRAND_TEMPLE_CERES:
             switch (b->monument.phase) {
                 case MONUMENT_START:

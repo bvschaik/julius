@@ -517,6 +517,7 @@ static void show_overlay_from_grid_offset(int grid_offset)
         case BUILDING_MISSION_POST:
         case BUILDING_NATIVE_HUT:
         case BUILDING_NATIVE_MEETING:
+        case BUILDING_NATIVE_DECORATION:
             overlay = OVERLAY_NATIVE;
             break;
         case BUILDING_WAREHOUSE:
