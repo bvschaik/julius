@@ -21,6 +21,7 @@ static const char *ini_keys[] = {
     "ui_smooth_scrolling",
     "ui_disable_mouse_edge_scrolling",
     "ui_disable_map_drag",
+    "ui_capture_mouse",
     "ui_visual_feedback_on_delete",
     "ui_allow_cycling_temples",
     "ui_show_water_structure_range",
@@ -39,7 +40,8 @@ static char string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
 
 static int default_values[CONFIG_MAX_ENTRIES] = {
     [CONFIG_SCREEN_DISPLAY_SCALE] = 100,
-    [CONFIG_SCREEN_CURSOR_SCALE] = 100
+    [CONFIG_SCREEN_CURSOR_SCALE] = 100,
+    [CONFIG_UI_CAPTURE_MOUSE] = 1,
 };
 static const char default_string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
 
