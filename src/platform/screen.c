@@ -165,7 +165,7 @@ int platform_screen_create(const char *title, int display_scale_percentage, int 
         }
     }
 
-    if (fullscreen && SDL_GetNumVideoDisplays() > 1) {
+    if (fullscreen) {
         SDL_SetWindowGrab(SDL.window, SDL_TRUE);
     }
 
@@ -288,9 +288,7 @@ void platform_screen_set_fullscreen(void)
     }
     SDL_SetWindowDisplayMode(SDL.window, &mode);
 
-    if (SDL_GetNumVideoDisplays() > 1) {
-        SDL_SetWindowGrab(SDL.window, SDL_TRUE);
-    }
+    SDL_SetWindowGrab(SDL.window, SDL_TRUE);
     setting_set_display(1, mode.w, mode.h);
 }
 
