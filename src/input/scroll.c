@@ -332,15 +332,16 @@ static int set_arrow_input(key *arrow, const key *opposite_arrow, float *modifie
 
 static int get_direction(const mouse *m)
 {
-    int is_inside_window = m->is_inside_window;
+    int is_inside_active_window = m->is_inside_window && m->window_has_focus;
     int width = screen_width();
     int height = screen_height();
-    if (setting_fullscreen() && m->x < width && m->y < height) {
+    if (setting_fullscreen() && m->window_has_focus) {
         // For Windows 10, in fullscreen mode, on HiDPI screens, this is needed
-        // to get scrolling to work
-        is_inside_window = 1;
+        // to get scrolling to work, because the mouse leaves the window on the
+        // rightmost and bottommost pixel, even though we have grabbed the mouse.
+        is_inside_active_window = 1;
     }
-    if (!is_inside_window && !m->is_touch) {
+    if (!is_inside_active_window && !m->is_touch) {
         return DIR_8_NONE;
     }
     int top = 0;

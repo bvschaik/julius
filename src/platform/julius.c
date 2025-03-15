@@ -233,10 +233,20 @@ static void handle_window_event(SDL_WindowEvent *event, int *window_active)
 {
     switch (event->event) {
         case SDL_WINDOWEVENT_ENTER:
+            SDL_Log("Mouse entered window");
             mouse_set_inside_window(1);
             break;
         case SDL_WINDOWEVENT_LEAVE:
+            SDL_Log("Mouse left window");
             mouse_set_inside_window(0);
+            break;
+        case SDL_WINDOWEVENT_FOCUS_LOST:
+            SDL_Log("Focus lost");
+            mouse_set_window_focus(0);
+            break;
+        case SDL_WINDOWEVENT_FOCUS_GAINED:
+            SDL_Log("Focus gained");
+            mouse_set_window_focus(1);
             break;
         case SDL_WINDOWEVENT_SIZE_CHANGED:
             SDL_Log("Window resized to %d x %d", (int) event->data1, (int) event->data2);
@@ -641,6 +651,7 @@ int main(int argc, char **argv)
     setup(&args);
 
     mouse_set_inside_window(1);
+    mouse_set_window_focus(1);
     run_and_draw();
 
 #ifdef __EMSCRIPTEN__

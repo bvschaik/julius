@@ -35,6 +35,7 @@ typedef struct {
     mouse_button left; /**< Left mouse button */
     mouse_button right; /**< Right mouse button */
     int is_inside_window; /**< Whether the mouse is in the window */
+    int window_has_focus; /**< Whether the window has focus */
     int is_touch; /**< Whether the mouse is a translated touch event */
 } mouse;
 
@@ -58,6 +59,8 @@ void mouse_set_right_down(int down);
 void mouse_set_scroll(scroll_state state);
 
 void mouse_set_inside_window(int inside);
+
+void mouse_set_window_focus(int focus);
 
 /**
  * Changes the mouse information from touch information
