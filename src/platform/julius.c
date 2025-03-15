@@ -238,6 +238,12 @@ static void handle_window_event(SDL_WindowEvent *event, int *window_active)
         case SDL_WINDOWEVENT_LEAVE:
             mouse_set_inside_window(0);
             break;
+        case SDL_WINDOWEVENT_FOCUS_LOST:
+            mouse_set_window_focus(0);
+            break;
+        case SDL_WINDOWEVENT_FOCUS_GAINED:
+            mouse_set_window_focus(1);
+            break;
         case SDL_WINDOWEVENT_SIZE_CHANGED:
             SDL_Log("Window resized to %d x %d", (int) event->data1, (int) event->data2);
             platform_screen_resize(event->data1, event->data2);
@@ -641,6 +647,7 @@ int main(int argc, char **argv)
     setup(&args);
 
     mouse_set_inside_window(1);
+    mouse_set_window_focus(1);
     run_and_draw();
 
 #ifdef __EMSCRIPTEN__
