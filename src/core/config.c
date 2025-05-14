@@ -28,6 +28,7 @@ static const char *ini_keys[] = {
     "ui_highlight_legions",
     "ui_show_military_sidebar",
     "ui_show_speedrun_info",
+    "ui_inverse_map_drag"
 };
 
 static const char *ini_string_keys[] = {
@@ -98,7 +99,7 @@ void config_load(void)
     while ((line = fgets(line_buffer, MAX_LINE, fp))) {
         // Remove newline from string
         size_t size = strlen(line);
-        while (size > 0 && (line[size-1] == '\n' || line[size-1] == '\r')) {
+        while (size > 0 && (line[size - 1] == '\n' || line[size - 1] == '\r')) {
             line[--size] = 0;
         }
         char *equals = strchr(line, '=');

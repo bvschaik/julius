@@ -4,6 +4,7 @@
 #include "core/file.h"
 #include "core/io.h"
 #include "core/string.h"
+#include "translation/translation.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -166,6 +167,9 @@ int lang_load(int is_editor)
 
 const uint8_t *lang_get_string(int group, int index)
 {
+    if (group == CUSTOM_TRANSLATION) {
+        return translation_for(index);
+    }
     const uint8_t *str = &data.text_data[data.text_entries[group].offset];
     uint8_t prev = 0;
     while (index > 0) {

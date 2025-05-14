@@ -27,6 +27,7 @@ static translation_string all_strings[] = {
     {TR_BUTTON_CANCEL, "Cancel"},
     {TR_BUTTON_RESET_DEFAULTS, "Reset defaults"},
     {TR_BUTTON_CONFIGURE_HOTKEYS, "Configure hotkeys"},
+    {TR_BUTTON_BACK_TO_MAIN_MENU, "Exit to main menu"},
     {TR_CONFIG_TITLE, "Julius configuration options"},
     {TR_CONFIG_LANGUAGE_LABEL, "Language:"},
     {TR_CONFIG_LANGUAGE_DEFAULT, "(default)"},
@@ -109,6 +110,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_DUPLICATE_TITLE, "Hotkey already used"},
     {TR_HOTKEY_DUPLICATE_MESSAGE, "This key combination is already assigned to the following action:"},
     {TR_WARNING_SCREENSHOT_SAVED, "Screenshot saved: "},
+    {TR_CONFIG_UI_INVERSE_MAP_DRAG, "Inverse dragging map with right mouse button"},
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

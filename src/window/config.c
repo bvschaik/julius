@@ -92,7 +92,7 @@ typedef struct {
     int type;
     int subtype;
     translation_key description;
-    const uint8_t* (*get_display_text)(void);
+    const uint8_t *(*get_display_text)(void);
     int enabled;
 } config_widget;
 
@@ -109,6 +109,7 @@ static config_widget all_widgets[MAX_WIDGETS] = {
     {TYPE_CHECKBOX, CONFIG_UI_SMOOTH_SCROLLING, TR_CONFIG_SMOOTH_SCROLLING},
     {TYPE_CHECKBOX, CONFIG_UI_DISABLE_MOUSE_EDGE_SCROLLING, TR_CONFIG_DISABLE_MOUSE_EDGE_SCROLLING},
     {TYPE_CHECKBOX, CONFIG_UI_DISABLE_RIGHT_CLICK_MAP_DRAG, TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG},
+    {TYPE_CHECKBOX, CONFIG_UI_INVERSE_MAP_DRAG, TR_CONFIG_UI_INVERSE_MAP_DRAG},
     {TYPE_CHECKBOX, CONFIG_UI_VISUAL_FEEDBACK_ON_DELETE, TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE},
     {TYPE_CHECKBOX, CONFIG_UI_ALLOW_CYCLING_TEMPLES, TR_CONFIG_ALLOW_CYCLING_TEMPLES},
     {TYPE_CHECKBOX, CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE, TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE},
@@ -471,7 +472,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
     int handled = 0;
     data.focus_button = 0;
-    
+
     for (int i = 0; i < NUM_VISIBLE_ITEMS && i < data.num_widgets; i++) {
         config_widget *w = data.widgets[i + scrollbar.scroll_position];
         int y = ITEM_Y_OFFSET + ITEM_HEIGHT * i;
@@ -497,7 +498,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
         bottom_buttons, NUM_BOTTOM_BUTTONS, &data.bottom_focus_button);
 
     if (!handled && (m->right.went_up || h->escape_pressed)) {
-        window_main_menu_show(0);
+        window_go_back();
     }
 }
 
@@ -637,12 +638,12 @@ static void button_close(int save, int param2)
 {
     if (!save) {
         cancel_values();
-        window_main_menu_show(0);
+        window_go_back();
         return;
     }
     if (apply_changed_configs()) {
         config_save();
-        window_main_menu_show(0);
+        window_go_back();
     }
 }
 

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.1...3.10)
 include(CMakeDependentOption)
 
 set(TARGET_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: vita switch android ios emscripten. Leave blank for no cross compilation")

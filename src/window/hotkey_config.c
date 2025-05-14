@@ -31,7 +31,7 @@ static void button_hotkey(int row, int is_alternative);
 static void button_reset_defaults(int param1, int param2);
 static void button_close(int save, int param2);
 
-static scrollbar_type scrollbar = {580, 72, 352, 560, NUM_VISIBLE_OPTIONS, on_scroll, 1};
+static scrollbar_type scrollbar = { 580, 72, 352, 560, NUM_VISIBLE_OPTIONS, on_scroll, 1 };
 
 typedef struct {
     int action;
@@ -173,7 +173,7 @@ static void init(void)
     scrollbar_init(&scrollbar, 0, sizeof(hotkey_widgets) / sizeof(hotkey_widget));
 
     for (int i = 0; i < HOTKEY_MAX_ITEMS; i++) {
-        hotkey_mapping empty = {KEY_TYPE_NONE, KEY_MOD_NONE, i};
+        hotkey_mapping empty = { KEY_TYPE_NONE, KEY_MOD_NONE, i };
 
         const hotkey_mapping *mapping = hotkey_for_action(i, 0);
         data.mappings[i][0] = mapping ? *mapping : empty;
@@ -281,7 +281,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0,
         bottom_buttons, NUM_BOTTOM_BUTTONS, &data.bottom_focus_button);
     if (!handled && (m->right.went_up || h->escape_pressed)) {
-        window_config_show();
+        window_go_back();
     }
 }
 

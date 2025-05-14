@@ -19,6 +19,7 @@
 #include "widget/city.h"
 #include "window/advisors.h"
 #include "window/city.h"
+#include "window/config.h"
 #include "window/difficulty_options.h"
 #include "window/display_options.h"
 #include "window/file_dialog.h"
@@ -28,6 +29,8 @@
 #include "window/popup_dialog.h"
 #include "window/sound_options.h"
 #include "window/speed_options.h"
+#include "translation/translation.h"
+#include "window/popup_dialog.h"
 
 enum {
     INFO_NONE = 0,
@@ -41,8 +44,10 @@ static void menu_file_replay_map(int param);
 static void menu_file_load_game(int param);
 static void menu_file_save_game(int param);
 static void menu_file_delete_game(int param);
+static void menu_file_exit_to_main_menu(int param);
 static void menu_file_exit_game(int param);
 
+static void menu_options_general(int param);
 static void menu_options_display(int param);
 static void menu_options_sound(int param);
 static void menu_options_speed(int param);
@@ -62,10 +67,12 @@ static menu_item menu_file[] = {
     {1, 3, menu_file_load_game, 0},
     {1, 4, menu_file_save_game, 0},
     {1, 6, menu_file_delete_game, 0},
+    {CUSTOM_TRANSLATION, TR_BUTTON_BACK_TO_MAIN_MENU, menu_file_exit_to_main_menu, 0},
     {1, 5, menu_file_exit_game, 0},
 };
 
 static menu_item menu_options[] = {
+    {CUSTOM_TRANSLATION, TR_CONFIG_TITLE, menu_options_general, 0},
     {2, 1, menu_options_display, 0},
     {2, 2, menu_options_sound, 0},
     {2, 3, menu_options_speed, 0},
@@ -96,8 +103,8 @@ static menu_item menu_advisors[] = {
 };
 
 static menu_bar_item menu[] = {
-    {1, menu_file, 6},
-    {2, menu_options, 5},
+    {1, menu_file, 7},
+    {2, menu_options, 6},
     {3, menu_help, 4},
     {4, menu_advisors, 12},
 };
@@ -130,7 +137,7 @@ static void clear_state(void)
 
 static void set_text_for_autosave(void)
 {
-    menu_update_text(&menu[INDEX_OPTIONS], 4, setting_monthly_autosave() ? 51 : 52);
+    menu_update_text(&menu[INDEX_OPTIONS], 5, setting_monthly_autosave() ? 51 : 52);
 }
 
 static void set_text_for_tooltips(void)
@@ -433,10 +440,35 @@ static void menu_file_confirm_exit(int accepted)
     }
 }
 
+static void main_menu_confirmed(int confirmed)
+{
+    if (!confirmed) {
+        window_city_show();
+        return;
+    }
+    building_construction_clear_type();
+    game_undo_disable();
+    game_state_reset_overlay();
+    window_main_menu_show(1);
+}
+
+static void menu_file_exit_to_main_menu(int param)
+{
+    clear_state();
+    window_popup_dialog_show_confirmation(CUSTOM_TRANSLATION, TR_BUTTON_BACK_TO_MAIN_MENU, main_menu_confirmed);
+}
+
 static void menu_file_exit_game(int param)
 {
     clear_state();
     window_popup_dialog_show(POPUP_DIALOG_QUIT, menu_file_confirm_exit, 1);
+}
+
+static void menu_options_general(int param)
+{
+    clear_state();
+    window_go_back();
+    window_config_show();
 }
 
 static void menu_options_display(int param)

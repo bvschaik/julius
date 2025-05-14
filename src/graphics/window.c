@@ -20,11 +20,13 @@ static struct {
 } data;
 
 static void noop(void)
-{
-}
+{}
+
 static void noop_input(const mouse *m, const hotkeys *h)
-{
-}
+{}
+
+static void noop_return(window_id from)
+{}
 
 static void increase_queue_index(void)
 {
@@ -90,14 +92,19 @@ void window_show(const window_type *window)
     if (!data.current_window->handle_input) {
         data.current_window->handle_input = noop_input;
     }
+    if (!data.current_window->on_return) {
+        data.current_window->on_return = noop_return;
+    }
     window_invalidate();
 }
 
 void window_go_back(void)
 {
     reset_input();
+    window_id from_id = window_get_id();
     decrease_queue_index();
     data.current_window = &data.window_queue[data.queue_index];
+    data.current_window->on_return(from_id);
     window_invalidate();
 }
 
