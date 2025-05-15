@@ -7,14 +7,17 @@
 #include "core/lang.h"
 #include "core/string.h"
 #include "game/settings.h"
+#include "game/state.h"
 #include "graphics/arrow_button.h"
 #include "graphics/graphics.h"
+#include "graphics/generic_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/menu.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
+#include "translation/translation.h"
 
 #define EXTRA_INFO_LINE_SPACE 16
 #define EXTRA_INFO_HEIGHT_GAME_SPEED 64
@@ -23,11 +26,14 @@
 #define EXTRA_INFO_VERTICAL_PADDING 8
 
 static void button_game_speed(int is_down, int param2);
+static void button_toggle_play_paused(int param1, int param2);
 
 static arrow_button arrow_buttons_speed[] = {
     {11, 30, 17, 24, button_game_speed, 1, 0},
     {35, 30, 15, 24, button_game_speed, 0, 0},
 };
+
+static generic_button play_pause_button = { 105, 27, 54, 30, button_toggle_play_paused, button_none };
 
 typedef struct {
     int value;
@@ -49,6 +55,8 @@ static struct {
     objective peace;
     objective favor;
     objective population;
+    int play_pause_button_focus;
+    int game_state;
 } data;
 
 static sidebar_extra_display calculate_displayable_info(sidebar_extra_display info_to_display, int available_height)
@@ -143,13 +151,14 @@ static int update_extra_info(int is_background)
     int changed = 0;
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED) {
         changed |= update_extra_info_value(setting_game_speed(), &data.game_speed);
+        changed |= update_extra_info_value(game_state_is_paused(), &data.game_state);
     }
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_UNEMPLOYMENT) {
         changed |= update_extra_info_value(city_labor_unemployment_percentage(), &data.unemployment_percentage);
         changed |= update_extra_info_value(
                        city_labor_workers_unemployed() - city_labor_workers_needed(),
                        &data.unemployment_amount
-                   );
+        );
     }
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_RATINGS) {
         if (is_background) {
@@ -206,6 +215,12 @@ static void draw_extra_info_panel(void)
 
         text_draw_percentage(data.game_speed, data.x_offset + 60, y_current_line - 2, FONT_NORMAL_GREEN);
 
+        if (game_state_is_paused()) {
+            text_draw_centered(translation_for(TR_EXTRA_PANEL_GAME_PLAY), data.x_offset + play_pause_button.x, y_current_line - 2, play_pause_button.width, FONT_NORMAL_GREEN, 0);
+        } else {
+            text_draw_centered(translation_for(TR_EXTRA_PANEL_GAME_PAUSE), data.x_offset + play_pause_button.x, y_current_line - 2, play_pause_button.width, FONT_NORMAL_GREEN, 0);
+        }
+
         y_current_line += EXTRA_INFO_VERTICAL_PADDING * 3;
     }
 
@@ -259,6 +274,8 @@ static void draw_extra_info_buttons(void)
     }
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED) {
         arrow_buttons_draw(data.x_offset, data.y_offset, arrow_buttons_speed, 2);
+        button_border_draw(data.x_offset + play_pause_button.x, data.y_offset + play_pause_button.y,
+            play_pause_button.width, play_pause_button.height, data.play_pause_button_focus == 1);
     }
 }
 
@@ -272,7 +289,9 @@ int sidebar_extra_handle_mouse(const mouse *m)
     if (!(data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED)) {
         return 0;
     }
-    return arrow_buttons_handle_mouse(m, data.x_offset, data.y_offset, arrow_buttons_speed, 2, 0);
+
+    return arrow_buttons_handle_mouse(m, data.x_offset, data.y_offset, arrow_buttons_speed, 2, 0) ||
+        generic_buttons_handle_mouse(m, data.x_offset, data.y_offset, &play_pause_button, 1, &data.play_pause_button_focus);
 }
 
 static void button_game_speed(int is_down, int param2)
@@ -282,4 +301,9 @@ static void button_game_speed(int is_down, int param2)
     } else {
         setting_increase_game_speed();
     }
+}
+
+static void button_toggle_play_paused(int param1, int param2)
+{
+    game_state_toggle_paused();
 }

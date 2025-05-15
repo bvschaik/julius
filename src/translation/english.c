@@ -111,6 +111,8 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_DUPLICATE_MESSAGE, "This key combination is already assigned to the following action:"},
     {TR_WARNING_SCREENSHOT_SAVED, "Screenshot saved: "},
     {TR_CONFIG_UI_INVERSE_MAP_DRAG, "Inverse dragging map with right mouse button"},
+    {TR_EXTRA_PANEL_GAME_PLAY, "Play"},
+    {TR_EXTRA_PANEL_GAME_PAUSE, "Pause"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
