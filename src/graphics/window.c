@@ -8,7 +8,7 @@
 #include "input/touch.h"
 #include "window/city.h"
 
-#define MAX_QUEUE 3
+#define MAX_QUEUE 5
 
 static struct {
     window_type window_queue[MAX_QUEUE];
