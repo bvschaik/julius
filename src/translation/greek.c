@@ -40,6 +40,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SMOOTH_SCROLLING, "Ενεργοποίηση ομαλής κύλισης"},
     {TR_CONFIG_DISABLE_MOUSE_EDGE_SCROLLING, "Απενεργοποίηση κύλισης χάρτη στην άκρη του παραθύρου"},
     {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "Απενεργοποίηση κύλισης με το δεξί κουμπί του ποντικιού"},
+    {TR_CONFIG_INVERSE_RIGHT_CLICK_MAP_DRAG, "Αντιστροφή συρσίματος χάρτη με το δεξί πλήκτρο του ποντικιού"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Βελτίωση της οπτικής ανατροφοδότησης κατά την εκκαθάριση γης"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Δυνατότητα κατασκευής κάθε ναού διαδοχικά"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Εμφάνιση εύρους κατά την οικοδόμηση δεξαμενών, σιντριβανιών και πηγαδιών"},

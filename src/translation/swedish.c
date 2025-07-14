@@ -39,6 +39,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SMOOTH_SCROLLING, "Mjuk skrollning"},
 	{TR_CONFIG_DISABLE_MOUSE_EDGE_SCROLLING, "Stäng av förflyttning av kartan vid fönstrets kanter"},																				 
     {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "Inaktivera att högerklick drar kartan"},
+    {TR_CONFIG_INVERSE_RIGHT_CLICK_MAP_DRAG, "Omvänd förflyttning av kartan med höger musknapp"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Öka visuell återkoppling vid rensning av land"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Tillåt att bygga varje tempel i följd"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Visa räckvidd vid bygge av reservoarer, fontäner och brunnar"},

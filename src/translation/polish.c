@@ -38,6 +38,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SIDEBAR_INFO, "Dodatkowe informacje w panelu sterowania"},
     {TR_CONFIG_SMOOTH_SCROLLING, "Płynne przewijanie"},
     {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "Wyłącz przeciąganie mapy prawym przyciskiem"},
+    {TR_CONFIG_INVERSE_RIGHT_CLICK_MAP_DRAG, "Odwróć kierunki przy przeciąganiu mapy prawym przyciskiem"},
     {TR_CONFIG_DISABLE_MOUSE_EDGE_SCROLLING, "Wyłącz przewijanie mapy na krawędzi okna"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Pokaż wybrany obszar przy oczyszczaniu terenu"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Pozwól na budowę kolejno każdej ze świątyń"},

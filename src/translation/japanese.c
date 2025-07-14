@@ -37,6 +37,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SMOOTH_SCROLLING, "スムーズなスクロールを有効化"},
     {TR_CONFIG_DISABLE_MOUSE_EDGE_SCROLLING, "画面端へカーソル移動時のスクロールを無効化"},
     {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "右クリックによるマップのドラッグを無効化"},
+    {TR_CONFIG_INVERSE_RIGHT_CLICK_MAP_DRAG, "マウスの右ボタンでマップを逆方向にドラッグ"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "整地時のビジュアル演出を改善"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "神殿の連続建設を許可"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "貯水場、噴水、井戸の建築時に範囲を表示"},

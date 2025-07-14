@@ -39,6 +39,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SMOOTH_SCROLLING, "Включить плавный скроллинг"},
     {TR_CONFIG_DISABLE_MOUSE_EDGE_SCROLLING, "Откл. перемещение по карте при движении за край дисплея"},
     {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "Откл. перемещение по карте по клику правой кнопкой"},
+    {TR_CONFIG_INVERSE_RIGHT_CLICK_MAP_DRAG, "Противоположное перемещение по карте щелчком правой кнопки"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Улучшить граф. эффект при очистке территории"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Постройка храмов в циклической последовательности"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Зона покрытия при постройке резервуаров, колодцев и фонтанов"},

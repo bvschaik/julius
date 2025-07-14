@@ -39,6 +39,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SMOOTH_SCROLLING, "Sanftes Scrollen aktivieren"},
     {TR_CONFIG_DISABLE_MOUSE_EDGE_SCROLLING, "Verschieben der Karte am Fensterrand deaktivieren"},
     {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "Verschieben der Karte mit der rechten Maustaste deaktivieren"},
+    {TR_CONFIG_INVERSE_RIGHT_CLICK_MAP_DRAG, "Invertiertes Ziehen der Karte mit der rechten Maustaste"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Das visuelle Feedback beim Planieren verbessern"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Erlaube alle Tempel nacheinander zu bauen"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Zeige Reichweite beim Bauen von Reservoirs und Brunnen"},

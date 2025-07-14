@@ -40,6 +40,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SMOOTH_SCROLLING, "부드러운 화면이동 가능"},
     {TR_CONFIG_DISABLE_MOUSE_EDGE_SCROLLING, "창 가장자리 화면이동 끄기"},
     {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "오른 클릭 드래그 화면이동 끄기"},
+    {TR_CONFIG_INVERSE_RIGHT_CLICK_MAP_DRAG, "지도 우클릭 드래그 반전"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "지형 평탄화 시 시각적 표현 향상"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "각각의 신전을 연속으로 설치 가능"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "저수조, 분수와 우물 설치 시 범위 표시"},
