@@ -39,6 +39,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SMOOTH_SCROLLING, "Activar desplazamiento suave del mapa"},
     {TR_CONFIG_DISABLE_MOUSE_EDGE_SCROLLING, "Desactivar desplazamiento en el borde de la ventana"},
     {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "Desactivar clic derecho para desplazar el mapa"},
+    {TR_CONFIG_INVERSE_RIGHT_CLICK_MAP_DRAG, "Arrastrar el mapa inversamente con el botón derecho del ratón"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Mejorar la retroalimentación visual al limpiar terreno"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Permitir construcción secuencial de templos"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Mostrar área cubierta por depósitos, fuentes y pozos al construir"},

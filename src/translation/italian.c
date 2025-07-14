@@ -39,6 +39,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SMOOTH_SCROLLING, "Abilita lo scorrimento fluido"},
     {TR_CONFIG_DISABLE_MOUSE_EDGE_SCROLLING, "Disabilia lo scorrimento col mouse a bordo finestra"},
     {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "Disabilita lo spostamento della mappa col tasto destro"},
+    {TR_CONFIG_INVERSE_RIGHT_CLICK_MAP_DRAG, "Spostamento invertito della mappa con il pulsante destro"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Migliora l'aspetto liberando il terreno"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Consente la costruzione di ogni tempio in successione"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Mostra la copertura di cisterne, fontane e pozzi"},

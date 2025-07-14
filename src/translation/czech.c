@@ -39,6 +39,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SMOOTH_SCROLLING, "Povolit plynulé posouvání"},
     {TR_CONFIG_DISABLE_MOUSE_EDGE_SCROLLING, "Vypnout posouvání mapy okrajem obrazovky"},
     {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "Zakázat posouvání mapy pravým tlačítkem myši"},
+    {TR_CONFIG_INVERSE_RIGHT_CLICK_MAP_DRAG, "Inverzní tažení mapy pravým tlačítkem myši"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Vylepšit vizuální odezvu při čištění země"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Povolit stavbu každého chrámu po sobě"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Zobrazit dosah při stavbě nádrží, fontán a studní"},

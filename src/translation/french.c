@@ -39,6 +39,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SMOOTH_SCROLLING, "Activer le défilement doux"},
     {TR_CONFIG_DISABLE_MOUSE_EDGE_SCROLLING, "Désactiver le défilement de la carte sur le bord de la fenêtre"},
     {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "Désactiver le clic droit pour déplacer la vue de la cité"},
+    {TR_CONFIG_INVERSE_RIGHT_CLICK_MAP_DRAG, "Inverser le déplacement de la carte avec le clic droit"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Améliore le retour visuel durant le dégagement du terrain"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Permet de construire tous les temples successivement"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Voir la zone d'effet en plaçant les bâtiments de distribution d'eau"},

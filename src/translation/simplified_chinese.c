@@ -39,6 +39,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SMOOTH_SCROLLING, "平滑视角滚动"},
     {TR_CONFIG_DISABLE_MOUSE_EDGE_SCROLLING, "禁用屏幕边缘滚动地图"},
     {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "禁用鼠标右键拖动地图"},
+    {TR_CONFIG_INVERSE_RIGHT_CLICK_MAP_DRAG, "用鼠标右键反向拖动地图"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "优化清理土地视觉效果"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "允许连续建造每种神庙"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "建造时显示贮水池水泉及水井覆盖范围"},
