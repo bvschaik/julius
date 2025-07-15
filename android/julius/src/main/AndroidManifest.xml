@@ -39,7 +39,7 @@
         <activity
             android:name=".DirectorySelectionActivity"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
 
         <!-- Support for Samsung DeX -->
         <meta-data
