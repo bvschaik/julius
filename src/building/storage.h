@@ -9,10 +9,6 @@
  * Building storage functions
  */
 
-enum {
-    BUILDING_STORAGE_DATA
-};
-
 /**
  * Storage state
  */
