@@ -47,7 +47,8 @@ android {
                         'SUPPORT_OGG=false',
                         'SUPPORT_MOD_MODPLUG=false',
                         'SUPPORT_MID_TIMIDITY=false',
-                        'SUPPORT_WAVPACK=false'
+                        'SUPPORT_WAVPACK=false',
+                        'SUPPORT_GME=false'
             }
         }
     }
