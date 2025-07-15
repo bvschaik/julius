@@ -30,12 +30,12 @@ task findSDL2Mixer {
 }
 
 android {
-    compileSdk 34
+    compileSdk 36
     ndkVersion "28.1.13356709"
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 34
+        targetSdkVersion 36
 
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
