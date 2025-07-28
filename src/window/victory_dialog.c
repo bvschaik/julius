@@ -66,11 +66,13 @@ static void draw_foreground(void)
         } else {
             lang_text_draw_centered(62, 27, 80, 246, 480, FONT_NORMAL_GREEN);
         }
-        if (scenario_campaign_rank() >= 2 || scenario_is_custom()) {
-            // Continue for 2/5 years
+        if (scenario_campaign_rank() >= 1 || scenario_is_custom()) {
+            // Continue for 2 years
             large_label_draw(80, 272, 30, focus_button_id == 2);
             lang_text_draw_centered(62, 4, 80, 278, 480, FONT_NORMAL_GREEN);
-
+        }
+        if (scenario_campaign_rank() >= 2 || scenario_is_custom()) {
+            // Continue for 5 years
             large_label_draw(80, 304, 30, focus_button_id == 3);
             lang_text_draw_centered(62, 5, 80, 310, 480, FONT_NORMAL_GREEN);
         }
@@ -87,6 +89,8 @@ static void handle_input(const mouse *m, const hotkeys *h)
     int num_buttons;
     if (scenario_campaign_rank() >= 2 || scenario_is_custom()) {
         num_buttons = 3;
+    } else if (scenario_campaign_rank() == 1) {
+        num_buttons = 2;
     } else {
         num_buttons = 1;
     }
