@@ -25,5 +25,6 @@ int main(void)
     check_language("Simplified Chinese", LANGUAGE_SIMPLIFIED_CHINESE);
     check_language("Traditional Chinese", LANGUAGE_TRADITIONAL_CHINESE);
     check_language("Czech", LANGUAGE_CZECH);
+    check_language("Greek", LANGUAGE_GREEK);
     return 0;
 }
