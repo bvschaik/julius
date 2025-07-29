@@ -292,6 +292,14 @@ static void load_empire(void)
     convert_uncompressed(&buf, size, data.empire_data);
 }
 
+static void fix_animation_offsets(void)
+{
+    data.main[image_group(GROUP_BUILDING_FOUNTAIN_4)].sprite_offset_x -= 1;
+    data.main[image_group(GROUP_BUILDING_FOUNTAIN_3)].sprite_offset_x -= 1;
+    data.main[image_group(GROUP_BUILDING_LION_HOUSE)].sprite_offset_y -= 1;
+    data.main[image_group(GROUP_BUILDING_ENGINEERS_POST)].sprite_offset_y += 1;
+}
+
 int image_load_climate(int climate_id, int is_editor, int force_reload)
 {
     if (climate_id == data.current_climate && is_editor == data.is_editor && !force_reload) {
@@ -321,6 +329,9 @@ int image_load_climate(int climate_id, int is_editor, int force_reload)
     data.is_editor = is_editor;
 
     load_empire();
+    if (!is_editor) {
+        fix_animation_offsets();
+    }
     return 1;
 }
 
