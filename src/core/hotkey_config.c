@@ -26,8 +26,8 @@ static const char *ini_keys[] = {
     "decrease_game_speed",
     "rotate_map_left",
     "rotate_map_right",
-    "build_clear_land",
-    "build_vacant_house",
+    "build_clear",
+    "build_house",
     "build_road",
     "build_plaza",
     "build_gardens",
@@ -227,6 +227,15 @@ static void load_defaults(void)
     }
 }
 
+static void add_mapping(int hotkey_id, const char *value)
+{
+    hotkey_mapping mapping;
+    if (key_combination_from_name(value, &mapping.key, &mapping.modifiers)) {
+        mapping.action = hotkey_id;
+        hotkey_config_add_mapping(&mapping);
+    }
+}
+
 static void load_file(void)
 {
     hotkey_config_clear();
@@ -250,13 +259,15 @@ static void load_file(void)
         char *value = &equals[1];
         for (int i = 0; i < HOTKEY_MAX_ITEMS; i++) {
             if (strcmp(ini_keys[i], line) == 0) {
-                hotkey_mapping mapping;
-                if (key_combination_from_name(value, &mapping.key, &mapping.modifiers)) {
-                    mapping.action = i;
-                    hotkey_config_add_mapping(&mapping);
-                }
+                add_mapping(i, value);
                 break;
             }
+        }
+        // Migrate changed keys
+        if (strcmp("build_clear_land", line) == 0) {
+            add_mapping(HOTKEY_BUILD_VACANT_HOUSE, value);
+        } else if (strcmp("build_vacant_house", line) == 0) {
+            add_mapping(HOTKEY_BUILD_CLEAR_LAND, value);
         }
     }
     file_close(fp);
