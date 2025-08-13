@@ -1,6 +1,7 @@
 #include "resource_settings.h"
 
 #include "building/count.h"
+#include "city/buildings.h"
 #include "city/resource.h"
 #include "core/calc.h"
 #include "core/image_group.h"
@@ -101,7 +102,18 @@ static void draw_foreground(void)
                 lang_text_draw(54, 13, 98 + width, 172, FONT_NORMAL_BLACK);
             }
         }
-    } else if (data.resource != RESOURCE_MEAT || !scenario_building_allowed(BUILDING_WHARF)) {
+    } else if (data.resource == RESOURCE_MEAT && scenario_building_allowed(BUILDING_WHARF)) {
+        int active_wharfs = city_buildings_working_wharfs() - city_buildings_shipyard_boats_requested();
+        if (active_wharfs > 0) {
+            // some wharfs are working and have boats
+            int width = text_draw_number(active_wharfs, '@', " ", 98, 172, FONT_NORMAL_BLACK);
+            if (active_wharfs == 1) {
+                lang_text_draw(54, 8, 98 + width, 172, FONT_NORMAL_BLACK);
+            } else {
+                lang_text_draw(54, 9, 98 + width, 172, FONT_NORMAL_BLACK);
+            }
+        }
+    } else {
         // we cannot produce this good
         lang_text_draw(54, 25, 98, 172, FONT_NORMAL_BLACK);
     }

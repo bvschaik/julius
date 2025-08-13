@@ -160,6 +160,11 @@ void city_buildings_add_working_dock(int building_id)
     ++city_data.building.working_docks;
 }
 
+int city_buildings_working_wharfs(void)
+{
+    return city_data.building.working_wharfs;
+}
+
 int city_buildings_shipyard_boats_requested(void)
 {
     return city_data.building.shipyard_boats_requested;
