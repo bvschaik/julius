@@ -17,7 +17,7 @@
 #include "widget/sidebar/city.h"
 #include "window/city.h"
 
-#define MENU_X_OFFSET 258
+#define MENU_X_OFFSET 266
 #define MENU_Y_OFFSET 110
 #define MENU_ITEM_HEIGHT 24
 #define MENU_ITEM_WIDTH 176
@@ -171,7 +171,7 @@ static void draw_menu_buttons(void)
 {
     int x_offset = get_sidebar_x_offset();
     int item_index = -1;
-    int item_x_align = x_offset - MENU_X_OFFSET - 8;
+    int item_x_align = x_offset - MENU_X_OFFSET;
     for (int i = 0; i < data.num_items; i++) {
         item_index = building_menu_next_index(data.selected_submenu, item_index);
         label_draw(item_x_align, data.y_offset + MENU_Y_OFFSET + MENU_ITEM_HEIGHT * i, 16,
