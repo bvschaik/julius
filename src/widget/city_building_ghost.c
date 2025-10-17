@@ -342,32 +342,28 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
 {
     int map_x = tile->x - 1;
     int map_y = tile->y - 1;
-    int blocked = 0;
-    if (building_construction_in_progress()) {
-        if (!building_construction_cost()) {
-            blocked = 1;
-        }
-    } else {
-        if (map_building_is_reservoir(map_x, map_y)) {
-            blocked = 0;
-        } else if (!map_tiles_are_clear(map_x, map_y, 3, TERRAIN_ALL)) {
-            blocked = 1;
-        }
+    int fully_blocked = 0;
+    if (building_construction_in_progress() && !building_construction_cost()) {
+        fully_blocked = 1;
     }
     if (city_finance_out_of_money()) {
-        blocked = 1;
+        fully_blocked = 1;
+    }
+    int blocked = fully_blocked;
+    int blocked_tiles[9];
+    int orientation_index = city_view_orientation() / 2;
+    if (!map_building_is_reservoir(map_x, map_y)) {
+        int grid_offset = tile->grid_offset + RESERVOIR_GRID_OFFSETS[orientation_index];
+        blocked += is_blocked_for_building(grid_offset, 9, blocked_tiles);
     }
     int draw_later = 0;
     int x_start, y_start, offset;
     int has_water = map_terrain_exists_tile_in_area_with_type(map_x - 1, map_y - 1, 5, TERRAIN_WATER);
-    int orientation_index = city_view_orientation() / 2;
     if (building_construction_in_progress()) {
         building_construction_get_view_position(&x_start, &y_start);
         y_start -= 30;
         if (blocked) {
-            for (int i = 0; i < 9; i++) {
-                draw_flat_tile(x_start + X_VIEW_OFFSETS[i], y_start + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
-            }
+            draw_partially_blocked(x_start, y_start, fully_blocked, 9, blocked_tiles);
         } else {
             offset = building_construction_get_start_grid_offset();
             if (offset != reservoir_range_data.last_grid_offset) {
@@ -422,9 +418,7 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
             tile->grid_offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_second_reservoir_range);
     }
     if (blocked) {
-        for (int i = 0; i < 9; i++) {
-            draw_flat_tile(x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
-        }
+        draw_partially_blocked(x, y, fully_blocked, 9, blocked_tiles);
     } else {
         draw_single_reservoir(x, y, has_water);
         if (draw_later) {
