@@ -114,10 +114,6 @@ extern z_const char * const z_errmsg[10];
 #  ifndef Z_SOLO
 #    if defined(__MWERKS__) && __dest_os != __be_os && __dest_os != __win32_os
 #      include <unix.h>
-#    else
-#      ifndef fdopen
-#        define fdopen(fd,mode) NULL
-#      endif
 #    endif
 #  endif
 #endif
