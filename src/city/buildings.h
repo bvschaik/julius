@@ -33,6 +33,7 @@ void city_buildings_remove_dock(void);
 void city_buildings_reset_dock_wharf_counters(void);
 void city_buildings_add_working_wharf(int needs_fishing_boat);
 void city_buildings_add_working_dock(int building_id);
+int city_buildings_working_wharfs(void);
 int city_buildings_shipyard_boats_requested(void);
 int city_buildings_has_working_dock(void);
 int city_buildings_get_working_dock(int index);
