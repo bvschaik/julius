@@ -14,22 +14,22 @@ jobs:
       matrix:
         include:
           - name: Linux Flatpak
-            os: ubuntu-22.04
+            os: ubuntu-24.04
             BUILD_TARGET: flatpak
             DEPLOY: flatpak
           - name: Linux AppImage
-            os: ubuntu-22.04
+            os: ubuntu-24.04
             BUILD_TARGET: appimage
             DEPLOY: appimage
           - name: Linux x64
-            os: ubuntu-22.04
+            os: ubuntu-24.04
             cache-key: linux-x64
             SDL_VERSION: 2.32.8
             SDL_MIXER_VERSION: 2.8.1
             BUILD_TARGET: linux
             DEPLOY: linux
           - name: Linux x64 (old SDL versions)
-            os: ubuntu-22.04
+            os: ubuntu-24.04
             cache-key: linux-x64
             SDL_VERSION: 2.0.0
             SDL_MIXER_VERSION: 2.0.0
@@ -51,22 +51,22 @@ jobs:
             BUILD_TARGET: ios
             DEPLOY: ios
           - name: Nintendo Switch
-            os: ubuntu-22.04
+            os: ubuntu-24.04
             BUILD_TARGET: switch
             DEPLOY: switch
           - name: PS Vita
-            os: ubuntu-22.04
+            os: ubuntu-24.04
             BUILD_TARGET: vita
             DEPLOY: vita
           - name: Android
-            os: ubuntu-22.04
+            os: ubuntu-24.04
             cache-key: android
             SDL_VERSION: 2.32.8
             SDL_MIXER_VERSION: 2.8.1
             BUILD_TARGET: android
             DEPLOY: android
           - name: Emscripten
-            os: ubuntu-22.04
+            os: ubuntu-24.04
             cache-key: emscripten
             BUILD_TARGET: emscripten
             DEPLOY: emscripten
