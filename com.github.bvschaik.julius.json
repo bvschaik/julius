@@ -1,7 +1,7 @@
 {
     "id" : "com.github.bvschaik.julius",
     "runtime" : "org.freedesktop.Platform",
-    "runtime-version" : "23.08",
+    "runtime-version" : "25.08",
     "sdk" : "org.freedesktop.Sdk",
     "command" : "julius",
     "finish-args" : [
