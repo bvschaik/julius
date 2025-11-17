@@ -632,6 +632,7 @@ set(TRANSLATION_FILES
 )
 set(GYMNASIUM_FILES
     ${PROJECT_SOURCE_DIR}/src/gymnasium/observation.c
+    ${PROJECT_SOURCE_DIR}/src/gymnasium/action.c
 )
 
 set(MACOSX_FILES "")

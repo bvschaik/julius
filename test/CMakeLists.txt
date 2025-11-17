@@ -158,3 +158,31 @@ add_executable(test_observation
 )
 
 add_test(NAME gymnasium_observation COMMAND test_observation)
+
+# Gymnasium action test
+add_executable(test_action
+    gymnasium/test_action.c
+    stub/image.c
+    stub/input.c
+    stub/lang.c
+    stub/log.c
+    stub/model.c
+    stub/sound_device.c
+    stub/ui.c
+    stub/video.c
+    ${PROJECT_SOURCE_DIR}/src/platform/file_manager.c
+    ${TEST_CORE_FILES}
+    ${TEST_BUILDING_FILES}
+    ${CITY_FILES}
+    ${EMPIRE_FILES}
+    ${FIGURE_FILES}
+    ${FIGURETYPE_FILES}
+    ${GAME_FILES}
+    ${GYMNASIUM_FILES}
+    ${MAP_FILES}
+    ${SCENARIO_FILES}
+    ${SOUND_FILES}
+    ${EDITOR_FILES}
+)
+
+add_test(NAME gymnasium_action COMMAND test_action)
