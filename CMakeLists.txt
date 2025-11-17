@@ -630,6 +630,9 @@ set(TRANSLATION_FILES
     ${PROJECT_SOURCE_DIR}/src/translation/traditional_chinese.c
     ${PROJECT_SOURCE_DIR}/src/translation/translation.c
 )
+set(GYMNASIUM_FILES
+    ${PROJECT_SOURCE_DIR}/src/gymnasium/observation.c
+)
 
 set(MACOSX_FILES "")
 if(APPLE AND NOT ${TARGET_PLATFORM} STREQUAL "ios")
@@ -660,6 +663,7 @@ set(SOURCE_FILES
     ${FIGURE_FILES}
     ${FIGURETYPE_FILES}
     ${GAME_FILES}
+    ${GYMNASIUM_FILES}
     ${INPUT_FILES}
     ${MAP_FILES}
     ${SCENARIO_FILES}

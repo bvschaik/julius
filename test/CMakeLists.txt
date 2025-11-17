@@ -130,3 +130,31 @@ add_integration_test(sav_native1 brugle-lugdunum-native.sav brugle-lugdunum-nati
 add_integration_test(sav_native2 cicero-lugdunum-trade.sav cicero-lugdunum-trade-after.sav 926)
 
 add_integration_test(sav_palace1 brugle-palacepeaks.sav brugle-palacepeaks-2.sav 2562)
+
+# Gymnasium observation test
+add_executable(test_observation
+    gymnasium/test_observation.c
+    stub/image.c
+    stub/input.c
+    stub/lang.c
+    stub/log.c
+    stub/model.c
+    stub/sound_device.c
+    stub/ui.c
+    stub/video.c
+    ${PROJECT_SOURCE_DIR}/src/platform/file_manager.c
+    ${TEST_CORE_FILES}
+    ${TEST_BUILDING_FILES}
+    ${CITY_FILES}
+    ${EMPIRE_FILES}
+    ${FIGURE_FILES}
+    ${FIGURETYPE_FILES}
+    ${GAME_FILES}
+    ${GYMNASIUM_FILES}
+    ${MAP_FILES}
+    ${SCENARIO_FILES}
+    ${SOUND_FILES}
+    ${EDITOR_FILES}
+)
+
+add_test(NAME gymnasium_observation COMMAND test_observation)
