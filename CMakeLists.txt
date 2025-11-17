@@ -9,6 +9,7 @@ string(TOLOWER ${TARGET_PLATFORM} TARGET_PLATFORM)
 option(DRAW_FPS "Draw FPS on the top left corner of the window." OFF)
 option(SYSTEM_LIBS "Use system libraries when available." ON)
 option(HEADLESS_BUILD "Build headless version without SDL2 for gymnasium integration." OFF)
+option(BUILD_GYMNASIUM_LIB "Build shared library for Python gymnasium integration." OFF)
 
 if(${TARGET_PLATFORM} STREQUAL "vita" AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     if(DEFINED ENV{VITASDK})
@@ -633,6 +634,7 @@ set(TRANSLATION_FILES
 set(GYMNASIUM_FILES
     ${PROJECT_SOURCE_DIR}/src/gymnasium/observation.c
     ${PROJECT_SOURCE_DIR}/src/gymnasium/action.c
+    ${PROJECT_SOURCE_DIR}/src/gymnasium/gymnasium.c
 )
 
 set(MACOSX_FILES "")
@@ -969,6 +971,43 @@ else()
         install(FILES "res/julius_48.png" DESTINATION "share/icons/hicolor/48x48/apps" RENAME "com.github.bvschaik.julius.png")
         install(FILES "res/julius_256.png" DESTINATION "share/icons/hicolor/256x256/apps" RENAME "com.github.bvschaik.julius.png")
         install(FILES "res/julius_512.png" DESTINATION "share/icons/hicolor/512x512/apps" RENAME "com.github.bvschaik.julius.png")
+    endif()
+
+    # Gymnasium shared library for Python bindings
+    if(BUILD_GYMNASIUM_LIB)
+        # Create shared library with all game code
+        add_library(julius_gym SHARED ${SOURCE_FILES})
+
+        # Set library properties
+        set_target_properties(julius_gym PROPERTIES
+            VERSION ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}
+            SOVERSION ${PROJECT_VERSION_MAJOR}
+            OUTPUT_NAME "julius_gym"
+            PREFIX "lib"
+        )
+
+        # Add same dependencies as main executable
+        target_include_directories(julius_gym PUBLIC ${CMAKE_SOURCE_DIR}/src)
+        target_link_libraries(julius_gym ${PNG_LIBRARY} ${ZLIB_LIBRARY} ${CMAKE_DL_LIBS} m)
+
+        if(NOT HEADLESS_BUILD)
+            target_link_libraries(julius_gym ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
+        endif()
+
+        # Install library
+        install(TARGETS julius_gym
+            LIBRARY DESTINATION lib
+            ARCHIVE DESTINATION lib
+            RUNTIME DESTINATION bin
+        )
+
+        # Install headers
+        install(FILES
+            src/gymnasium/gymnasium.h
+            src/gymnasium/observation.h
+            src/gymnasium/action.h
+            DESTINATION include/julius_gym
+        )
     endif()
 
     # Unit tests

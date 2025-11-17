@@ -38,3 +38,16 @@ local.properties
 /android/julius.keystore
 /android/play-publisher.json
 /android/julius/src/main/play
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.coverage
+htmlcov/
