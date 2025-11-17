@@ -1,6 +1,15 @@
 #include "arguments.h"
 
+#ifndef HEADLESS_BUILD
 #include "SDL.h"
+#else
+#include <string.h>
+#include <stdlib.h>
+// Define SDL string functions as standard C equivalents for headless mode
+#define SDL_strcmp strcmp
+#define SDL_strncmp strncmp
+#define SDL_strtol strtol
+#endif
 
 #include <stdio.h>
 
