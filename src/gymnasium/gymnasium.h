@@ -87,6 +87,18 @@ const char *julius_env_get_error(julius_env_t *env);
  */
 int julius_env_is_initialized(julius_env_t *env);
 
+/**
+ * Get map data for rendering
+ * @param env Environment handle
+ * @param terrain_data Output: 162x162 array of terrain flags (must be pre-allocated)
+ * @param building_data Output: 162x162 array of building IDs (must be pre-allocated)
+ * @param width Output: actual map width
+ * @param height Output: actual map height
+ * @return 0 on success, -1 on error
+ */
+int julius_env_get_map_data(julius_env_t *env, uint16_t *terrain_data,
+                             uint16_t *building_data, int *width, int *height);
+
 #ifdef __cplusplus
 }
 #endif

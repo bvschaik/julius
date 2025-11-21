@@ -257,7 +257,7 @@ class JuliusEnv(gym.Env):
         - Max steps reached (if configured)
     """
 
-    metadata = {"render_modes": []}
+    metadata = {"render_modes": ["human", "rgb_array", "save"]}
 
     def __init__(
         self,
@@ -411,6 +411,16 @@ class JuliusEnv(gym.Env):
         self.lib.julius_env_get_error.argtypes = [c_void_p]
         self.lib.julius_env_get_error.restype = c_char_p
 
+        # julius_env_get_map_data
+        self.lib.julius_env_get_map_data.argtypes = [
+            c_void_p,
+            POINTER(ctypes.c_uint16),
+            POINTER(ctypes.c_uint16),
+            POINTER(c_int32),
+            POINTER(c_int32),
+        ]
+        self.lib.julius_env_get_map_data.restype = c_int32
+
     def _obs_to_dict(self, obs: Observation) -> Dict[str, Any]:
         """Convert C observation structure to Python dict (flattened)"""
         return {
@@ -541,6 +551,142 @@ class JuliusEnv(gym.Env):
         info = {"message": result.info.decode("utf-8")}
 
         return observation, reward, terminated, truncated, info
+
+    def get_map_data(self) -> Tuple[np.ndarray, np.ndarray, int, int]:
+        """
+        Get the current map data for rendering.
+
+        Returns:
+            terrain_map: 162x162 numpy array of terrain flags
+            building_map: 162x162 numpy array of building IDs
+            width: Actual map width
+            height: Actual map height
+        """
+        # Allocate arrays for map data
+        grid_size = 162 * 162
+        terrain_data = (ctypes.c_uint16 * grid_size)()
+        building_data = (ctypes.c_uint16 * grid_size)()
+        width = c_int32()
+        height = c_int32()
+
+        # Call C function
+        ret = self.lib.julius_env_get_map_data(
+            self.env_handle,
+            terrain_data,
+            building_data,
+            ctypes.byref(width),
+            ctypes.byref(height),
+        )
+
+        if ret != 0:
+            error = self.lib.julius_env_get_error(self.env_handle)
+            raise RuntimeError(f"Failed to get map data: {error.decode()}")
+
+        # Convert to numpy arrays
+        terrain_map = np.array(terrain_data, dtype=np.uint16).reshape(162, 162)
+        building_map = np.array(building_data, dtype=np.uint16).reshape(162, 162)
+
+        return terrain_map, building_map, width.value, height.value
+
+    def render(self, mode: str = "human", output_file: Optional[str] = None):
+        """
+        Render the current city map.
+
+        Args:
+            mode: Render mode ("human" displays, "rgb_array" returns array, "save" saves to file)
+            output_file: Optional filename to save the rendered map (used with mode="save")
+        """
+        try:
+            import matplotlib.pyplot as plt
+            import matplotlib.patches as mpatches
+        except ImportError:
+            raise ImportError(
+                "matplotlib is required for rendering. "
+                "Install with: pip install matplotlib"
+            )
+
+        # Get map data
+        terrain_map, building_map, width, height = self.get_map_data()
+
+        # Use full grid if width/height are 0 (no scenario loaded)
+        if width == 0 or height == 0:
+            width = 162
+            height = 162
+
+        # Create RGB image based on terrain and buildings
+        rgb_map = np.zeros((162, 162, 3), dtype=np.uint8)
+
+        # Terrain color mapping
+        TERRAIN_WATER = 0x04
+        TERRAIN_TREE = 0x01
+        TERRAIN_ROCK = 0x02
+        TERRAIN_ROAD = 0x40
+        TERRAIN_BUILDING = 0x08
+        TERRAIN_GARDEN = 0x20
+        TERRAIN_AQUEDUCT = 0x100
+        TERRAIN_WALL = 0x4000
+        TERRAIN_MEADOW = 0x800
+
+        for y in range(162):
+            for x in range(162):
+                terrain = terrain_map[y, x]
+                building = building_map[y, x]
+
+                # Color priority: buildings > water > roads > trees > rocks > meadow
+                if building > 0:
+                    # Buildings - various shades of gray/brown
+                    rgb_map[y, x] = [139, 69, 19]  # Brown for buildings
+                elif terrain & TERRAIN_WATER:
+                    rgb_map[y, x] = [30, 144, 255]  # Blue for water
+                elif terrain & TERRAIN_WALL:
+                    rgb_map[y, x] = [128, 128, 128]  # Gray for walls
+                elif terrain & TERRAIN_ROAD:
+                    rgb_map[y, x] = [192, 192, 192]  # Light gray for roads
+                elif terrain & TERRAIN_AQUEDUCT:
+                    rgb_map[y, x] = [100, 149, 237]  # Cornflower blue for aqueducts
+                elif terrain & TERRAIN_GARDEN:
+                    rgb_map[y, x] = [50, 205, 50]  # Lime green for gardens
+                elif terrain & TERRAIN_TREE:
+                    rgb_map[y, x] = [34, 139, 34]  # Forest green for trees
+                elif terrain & TERRAIN_ROCK:
+                    rgb_map[y, x] = [105, 105, 105]  # Dim gray for rocks
+                elif terrain & TERRAIN_MEADOW:
+                    rgb_map[y, x] = [144, 238, 144]  # Light green for meadow
+                else:
+                    rgb_map[y, x] = [222, 184, 135]  # Burlywood for empty land
+
+        # Crop to actual map size
+        rgb_map = rgb_map[:height, :width]
+
+        if mode == "rgb_array":
+            return rgb_map
+
+        # Create figure
+        fig, ax = plt.subplots(figsize=(12, 12))
+        ax.imshow(rgb_map)
+        ax.set_title("Julius City Map", fontsize=16)
+        ax.axis("off")
+
+        # Create legend
+        legend_elements = [
+            mpatches.Patch(color=[139/255, 69/255, 19/255], label="Buildings"),
+            mpatches.Patch(color=[30/255, 144/255, 255/255], label="Water"),
+            mpatches.Patch(color=[192/255, 192/255, 192/255], label="Roads"),
+            mpatches.Patch(color=[34/255, 139/255, 34/255], label="Trees"),
+            mpatches.Patch(color=[50/255, 205/255, 50/255], label="Gardens"),
+            mpatches.Patch(color=[144/255, 238/255, 144/255], label="Meadow"),
+        ]
+        ax.legend(handles=legend_elements, loc="upper right", bbox_to_anchor=(1.15, 1))
+
+        if mode == "save" or output_file:
+            filename = output_file or "city_map.png"
+            plt.savefig(filename, bbox_inches="tight", dpi=150)
+            print(f"Map saved to {filename}")
+        elif mode == "human":
+            plt.tight_layout()
+            plt.show()
+
+        plt.close()
 
     def close(self):
         """Clean up environment resources"""

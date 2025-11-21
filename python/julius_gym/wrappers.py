@@ -166,23 +166,50 @@ class SimplifyObservation(gym.ObservationWrapper):
 
     def observation(self, obs):
         """Extract only key metrics"""
-        return {
-            "ratings": obs["ratings"],
-            "finance": {
-                "treasury": obs["finance"]["treasury"],
-                "tax_percentage": obs["finance"]["tax_percentage"],
-            },
-            "population": {
-                "total": obs["population"]["total"],
-                "sentiment": obs["population"]["sentiment"],
-            },
-            "labor": {
-                "unemployment_percentage": obs["labor"]["unemployment_percentage"],
-            },
-            "resources": {
-                "food_stocks": obs["resources"]["food_stocks"],
-            },
-        }
+        # Handle both flat and nested observation spaces
+        if "ratings" in obs:
+            # Nested dict format
+            return {
+                "ratings": obs["ratings"],
+                "finance": {
+                    "treasury": obs["finance"]["treasury"],
+                    "tax_percentage": obs["finance"]["tax_percentage"],
+                },
+                "population": {
+                    "total": obs["population"]["total"],
+                    "sentiment": obs["population"]["sentiment"],
+                },
+                "labor": {
+                    "unemployment_percentage": obs["labor"]["unemployment_percentage"],
+                },
+                "resources": {
+                    "food_stocks": obs["resources"]["food_stocks"],
+                },
+            }
+        else:
+            # Flat format (from JuliusEnv)
+            return {
+                "ratings": {
+                    "culture": obs["ratings_culture"],
+                    "prosperity": obs["ratings_prosperity"],
+                    "peace": obs["ratings_peace"],
+                    "favor": obs["ratings_favor"],
+                },
+                "finance": {
+                    "treasury": obs["finance_treasury"],
+                    "tax_percentage": obs["finance_tax_percentage"],
+                },
+                "population": {
+                    "total": obs["population_total"],
+                    "sentiment": obs["population_sentiment"],
+                },
+                "labor": {
+                    "unemployment_percentage": obs["labor_unemployment_percentage"],
+                },
+                "resources": {
+                    "food_stocks": obs["resources_food_stocks"],
+                },
+            }
 
 
 class RewardShaping(gym.Wrapper):
@@ -239,7 +266,7 @@ class RewardShaping(gym.Wrapper):
 
 
 def make_efficient_env(data_directory, scenario_file=None, max_ticks=5000,
-                       simplify=True, normalize=True, flatten=True, shape_rewards=True):
+                       lib_path=None, simplify=True, normalize=True, flatten=True, shape_rewards=True):
     """
     Create an environment with wrappers optimized for efficient RL training.
 
@@ -247,6 +274,7 @@ def make_efficient_env(data_directory, scenario_file=None, max_ticks=5000,
         data_directory: Path to Caesar III data
         scenario_file: Optional scenario file
         max_ticks: Max ticks per episode
+        lib_path: Optional path to libjulius_gym library
         simplify: Use simplified observation space
         normalize: Normalize observations
         flatten: Flatten to Box space (required for some algorithms)
@@ -261,6 +289,7 @@ def make_efficient_env(data_directory, scenario_file=None, max_ticks=5000,
         data_directory=data_directory,
         scenario_file=scenario_file,
         max_ticks=max_ticks,
+        lib_path=lib_path,
     )
 
     if simplify:

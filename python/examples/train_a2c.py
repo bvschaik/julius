@@ -28,13 +28,23 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from julius_gym.wrappers import make_efficient_env
 
 
-def make_env(data_dir, scenario, max_ticks):
+def tensorboard_available():
+    """Check if tensorboard is available"""
+    try:
+        import tensorboard
+        return True
+    except ImportError:
+        return False
+
+
+def make_env(data_dir, scenario, max_ticks, lib_path=None):
     """Create a single environment (for vectorization)"""
     def _init():
         env = make_efficient_env(
             data_directory=data_dir,
             scenario_file=scenario,
             max_ticks=max_ticks,
+            lib_path=lib_path,
             simplify=True,
             normalize=True,
             flatten=True,
@@ -50,6 +60,10 @@ def main():
         "--data-dir",
         required=True,
         help="Path to Caesar III data directory",
+    )
+    parser.add_argument(
+        "--lib-path",
+        help="Path to libjulius_gym library (optional, auto-detected if not provided)",
     )
     parser.add_argument(
         "--scenario",
@@ -103,7 +117,7 @@ def main():
 
     # Use DummyVecEnv for easier debugging, SubprocVecEnv for better performance
     env = DummyVecEnv([
-        make_env(args.data_dir, args.scenario, args.max_ticks)
+        make_env(args.data_dir, args.scenario, args.max_ticks, args.lib_path)
         for _ in range(args.n_envs)
     ])
 
@@ -137,7 +151,7 @@ def main():
             ),
             verbose=1,
             device=device,
-            tensorboard_log=f"./tensorboard/{Path(args.model_path).name}/",
+            # tensorboard_log=f"./tensorboard/{Path(args.model_path).name}/",  # Disabled - requires tensorboard package
         )
 
         print(f"\nModel architecture:")
@@ -166,7 +180,7 @@ def main():
             model.learn(
                 total_timesteps=args.timesteps,
                 callback=checkpoint_callback,
-                progress_bar=True,
+                progress_bar=False,  # Requires tqdm/rich: pip install stable-baselines3[extra]
             )
         except KeyboardInterrupt:
             print("\n\nTraining interrupted by user.")
@@ -181,20 +195,28 @@ def main():
     print("Evaluating trained model...")
     print("=" * 60)
 
-    # Create single env for evaluation
-    eval_env = make_efficient_env(
-        data_directory=args.data_dir,
-        scenario_file=args.scenario,
-        max_ticks=args.max_ticks,
-        simplify=True,
-        normalize=True,
-        flatten=True,
-        shape_rewards=True,
-    )
-    eval_env = Monitor(eval_env)
-
     n_eval_episodes = 3
+    terminated = False
+    truncated = False
+
+    print(f"Starting evaluation with {n_eval_episodes} episodes")
+    print("Note: Creating fresh environment for each episode to avoid reset issues\n")
+
     for episode in range(n_eval_episodes):
+        # Create a fresh environment for each episode to avoid segfault on reset
+        print(f"Creating fresh environment for episode {episode + 1}")
+        eval_env = make_efficient_env(
+            data_directory=args.data_dir,
+            scenario_file=args.scenario,
+            max_ticks=args.max_ticks,
+            lib_path=args.lib_path,
+            simplify=True,
+            normalize=True,
+            flatten=True,
+            shape_rewards=True,
+        )
+        eval_env = Monitor(eval_env)
+
         obs, info = eval_env.reset()
         done = False
         episode_reward = 0
@@ -215,17 +237,42 @@ def main():
 
         print(f"\n  Episode finished!")
         print(f"    Steps: {step_count}")
-        print(f"    Total reward: {episode_reward:.3f}")
+        print(f"    Total reward: {float(episode_reward):.3f}")
         print(f"    Terminated: {terminated}, Truncated: {truncated}")
 
-    eval_env.close()
+        # Render city map from the last evaluation episode
+        if episode == n_eval_episodes - 1:
+            print("\n" + "=" * 60)
+            print("Rendering final city map...")
+            print("=" * 60)
+            try:
+                # Get the underlying JuliusEnv from the wrapped environment
+                base_env = eval_env
+                while hasattr(base_env, 'env'):
+                    base_env = base_env.env
+
+                # Render and save the city map
+                map_filename = f"{args.model_path}_final_city.png"
+                base_env.render(mode="save", output_file=map_filename)
+                print(f"City map saved to: {map_filename}")
+            except Exception as e:
+                print(f"Warning: Could not render city map: {e}")
+                import traceback
+                traceback.print_exc()
+
+        # Close this episode's environment before creating the next one
+        eval_env.close()
+
     env.close()
 
     print("\n" + "=" * 60)
     print("Training complete!")
     print(f"Model saved to: {args.model_path}")
-    print(f"TensorBoard logs: ./tensorboard/{Path(args.model_path).name}/")
-    print(f"\nView training with: tensorboard --logdir=./tensorboard")
+    try:
+        if 'map_filename' in locals():
+            print(f"City map saved to: {map_filename}")
+    except:
+        pass
     print("=" * 60)
 
 

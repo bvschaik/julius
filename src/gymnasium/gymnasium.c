@@ -6,6 +6,9 @@
 #include "game/file.h"
 #include "game/game.h"
 #include "game/time.h"
+#include "map/building.h"
+#include "map/grid.h"
+#include "map/terrain.h"
 #include "platform/file_manager.h"
 #include "scenario/criteria.h"
 
@@ -311,4 +314,32 @@ const char *julius_env_get_error(julius_env_t *env)
 int julius_env_is_initialized(julius_env_t *env)
 {
     return env && env->initialized;
+}
+
+int julius_env_get_map_data(julius_env_t *env, uint16_t *terrain_data,
+                             uint16_t *building_data, int *width, int *height)
+{
+    if (!env || !env->initialized || !terrain_data || !building_data || !width || !height) {
+        return -1;
+    }
+
+    // Get actual map dimensions
+    *width = map_grid_width();
+    *height = map_grid_height();
+
+    // Extract terrain and building data for each grid cell
+    for (int y = 0; y < GRID_SIZE; y++) {
+        for (int x = 0; x < GRID_SIZE; x++) {
+            int grid_offset = map_grid_offset(x, y);
+            int index = y * GRID_SIZE + x;
+
+            // Get terrain flags
+            terrain_data[index] = (uint16_t) map_terrain_get(grid_offset);
+
+            // Get building ID
+            building_data[index] = (uint16_t) map_building_at(grid_offset);
+        }
+    }
+
+    return 0;
 }
