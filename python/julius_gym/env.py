@@ -300,35 +300,62 @@ class JuliusEnv(gym.Env):
         if not self.env_handle:
             raise RuntimeError("Failed to create Julius environment")
 
-        # Define observation space
+        # Define observation space (flattened for stable-baselines3 compatibility)
         self.observation_space = spaces.Dict(
             {
-                "ratings": spaces.Dict(
-                    {
-                        "culture": spaces.Box(0, 100, shape=(), dtype=np.int32),
-                        "prosperity": spaces.Box(0, 100, shape=(), dtype=np.int32),
-                        "peace": spaces.Box(0, 100, shape=(), dtype=np.int32),
-                        "favor": spaces.Box(0, 100, shape=(), dtype=np.int32),
-                    }
-                ),
-                "finance": spaces.Dict(
-                    {
-                        "treasury": spaces.Box(-10000, 1000000, shape=(), dtype=np.int32),
-                        "tax_percentage": spaces.Box(0, 25, shape=(), dtype=np.int32),
-                    }
-                ),
-                "population": spaces.Dict(
-                    {
-                        "total": spaces.Box(0, 100000, shape=(), dtype=np.int32),
-                        "sentiment": spaces.Box(0, 100, shape=(), dtype=np.int32),
-                    }
-                ),
-                "time": spaces.Dict(
-                    {
-                        "year": spaces.Box(0, 1000, shape=(), dtype=np.int32),
-                        "month": spaces.Box(0, 11, shape=(), dtype=np.int32),
-                    }
-                ),
+                # Ratings
+                "ratings_culture": spaces.Box(0, 100, shape=(1,), dtype=np.int32),
+                "ratings_prosperity": spaces.Box(0, 100, shape=(1,), dtype=np.int32),
+                "ratings_peace": spaces.Box(0, 100, shape=(1,), dtype=np.int32),
+                "ratings_favor": spaces.Box(0, 100, shape=(1,), dtype=np.int32),
+                # Finance
+                "finance_treasury": spaces.Box(-10000, 1000000, shape=(1,), dtype=np.int32),
+                "finance_tax_percentage": spaces.Box(0, 25, shape=(1,), dtype=np.int32),
+                "finance_estimated_tax_income": spaces.Box(0, 100000, shape=(1,), dtype=np.int32),
+                "finance_last_year_income": spaces.Box(0, 1000000, shape=(1,), dtype=np.int32),
+                "finance_last_year_expenses": spaces.Box(0, 1000000, shape=(1,), dtype=np.int32),
+                "finance_last_year_net": spaces.Box(-1000000, 1000000, shape=(1,), dtype=np.int32),
+                # Population
+                "population_total": spaces.Box(0, 100000, shape=(1,), dtype=np.int32),
+                "population_school_age": spaces.Box(0, 100000, shape=(1,), dtype=np.int32),
+                "population_academy_age": spaces.Box(0, 100000, shape=(1,), dtype=np.int32),
+                "population_working_age": spaces.Box(0, 100000, shape=(1,), dtype=np.int32),
+                "population_sentiment": spaces.Box(0, 100, shape=(1,), dtype=np.int32),
+                # Labor
+                "labor_workers_needed": spaces.Box(0, 100000, shape=(1,), dtype=np.int32),
+                "labor_workers_employed": spaces.Box(0, 100000, shape=(1,), dtype=np.int32),
+                "labor_unemployment_percentage": spaces.Box(0, 100, shape=(1,), dtype=np.int32),
+                "labor_wages": spaces.Box(0, 100, shape=(1,), dtype=np.int32),
+                # Resources
+                "resources_food_stocks": spaces.Box(0, 1000000, shape=(1,), dtype=np.int32),
+                "resources_food_types_available": spaces.Box(0, 10, shape=(1,), dtype=np.int32),
+                # Buildings
+                "buildings_housing": spaces.Box(0, 10000, shape=(1,), dtype=np.int32),
+                "buildings_housing_capacity": spaces.Box(0, 100000, shape=(1,), dtype=np.int32),
+                # Migration
+                "migration_immigration_amount": spaces.Box(0, 10000, shape=(1,), dtype=np.int32),
+                "migration_emigration_amount": spaces.Box(0, 10000, shape=(1,), dtype=np.int32),
+                "migration_immigration_queue_size": spaces.Box(0, 10000, shape=(1,), dtype=np.int32),
+                "migration_emigration_queue_size": spaces.Box(0, 10000, shape=(1,), dtype=np.int32),
+                # Culture
+                "culture_entertainment": spaces.Box(0, 100, shape=(1,), dtype=np.int32),
+                "culture_average_entertainment": spaces.Box(0, 100, shape=(1,), dtype=np.int32),
+                "culture_average_education": spaces.Box(0, 100, shape=(1,), dtype=np.int32),
+                "culture_average_health": spaces.Box(0, 100, shape=(1,), dtype=np.int32),
+                "culture_religion_coverage": spaces.Box(0, 100, shape=(1,), dtype=np.int32),
+                # Time
+                "time_tick": spaces.Box(0, 1000000, shape=(1,), dtype=np.int32),
+                "time_day": spaces.Box(0, 15, shape=(1,), dtype=np.int32),
+                "time_month": spaces.Box(0, 11, shape=(1,), dtype=np.int32),
+                "time_year": spaces.Box(0, 1000, shape=(1,), dtype=np.int32),
+                "time_total_months": spaces.Box(0, 12000, shape=(1,), dtype=np.int32),
+                # Victory
+                "victory_culture_goal": spaces.Box(0, 100, shape=(1,), dtype=np.int32),
+                "victory_prosperity_goal": spaces.Box(0, 100, shape=(1,), dtype=np.int32),
+                "victory_peace_goal": spaces.Box(0, 100, shape=(1,), dtype=np.int32),
+                "victory_favor_goal": spaces.Box(0, 100, shape=(1,), dtype=np.int32),
+                "victory_population_goal": spaces.Box(0, 100000, shape=(1,), dtype=np.int32),
+                "victory_time_limit_years": spaces.Box(0, 1000, shape=(1,), dtype=np.int32),
             }
         )
 
@@ -385,71 +412,61 @@ class JuliusEnv(gym.Env):
         self.lib.julius_env_get_error.restype = c_char_p
 
     def _obs_to_dict(self, obs: Observation) -> Dict[str, Any]:
-        """Convert C observation structure to Python dict"""
+        """Convert C observation structure to Python dict (flattened)"""
         return {
-            "ratings": {
-                "culture": obs.ratings.culture,
-                "prosperity": obs.ratings.prosperity,
-                "peace": obs.ratings.peace,
-                "favor": obs.ratings.favor,
-            },
-            "finance": {
-                "treasury": obs.finance.treasury,
-                "tax_percentage": obs.finance.tax_percentage,
-                "estimated_tax_income": obs.finance.estimated_tax_income,
-                "last_year_income": obs.finance.last_year_income,
-                "last_year_expenses": obs.finance.last_year_expenses,
-                "last_year_net": obs.finance.last_year_net,
-            },
-            "population": {
-                "total": obs.population.total,
-                "school_age": obs.population.school_age,
-                "academy_age": obs.population.academy_age,
-                "working_age": obs.population.working_age,
-                "sentiment": obs.population.sentiment,
-            },
-            "labor": {
-                "workers_needed": obs.labor.workers_needed,
-                "workers_employed": obs.labor.workers_employed,
-                "unemployment_percentage": obs.labor.unemployment_percentage,
-                "wages": obs.labor.wages,
-            },
-            "resources": {
-                "food_stocks": obs.resources.food_stocks,
-                "food_types_available": obs.resources.food_types_available,
-            },
-            "buildings": {
-                "housing": obs.buildings.housing,
-                "housing_capacity": obs.buildings.housing_capacity,
-            },
-            "migration": {
-                "immigration_amount": obs.migration.immigration_amount,
-                "emigration_amount": obs.migration.emigration_amount,
-                "immigration_queue_size": obs.migration.immigration_queue_size,
-                "emigration_queue_size": obs.migration.emigration_queue_size,
-            },
-            "culture": {
-                "entertainment": obs.culture.entertainment,
-                "average_entertainment": obs.culture.average_entertainment,
-                "average_education": obs.culture.average_education,
-                "average_health": obs.culture.average_health,
-                "religion_coverage": obs.culture.religion_coverage,
-            },
-            "time": {
-                "tick": obs.time.tick,
-                "day": obs.time.day,
-                "month": obs.time.month,
-                "year": obs.time.year,
-                "total_months": obs.time.total_months,
-            },
-            "victory": {
-                "culture_goal": obs.victory.culture_goal,
-                "prosperity_goal": obs.victory.prosperity_goal,
-                "peace_goal": obs.victory.peace_goal,
-                "favor_goal": obs.victory.favor_goal,
-                "population_goal": obs.victory.population_goal,
-                "time_limit_years": obs.victory.time_limit_years,
-            },
+            # Ratings
+            "ratings_culture": np.array([obs.ratings.culture], dtype=np.int32),
+            "ratings_prosperity": np.array([obs.ratings.prosperity], dtype=np.int32),
+            "ratings_peace": np.array([obs.ratings.peace], dtype=np.int32),
+            "ratings_favor": np.array([obs.ratings.favor], dtype=np.int32),
+            # Finance
+            "finance_treasury": np.array([obs.finance.treasury], dtype=np.int32),
+            "finance_tax_percentage": np.array([obs.finance.tax_percentage], dtype=np.int32),
+            "finance_estimated_tax_income": np.array([obs.finance.estimated_tax_income], dtype=np.int32),
+            "finance_last_year_income": np.array([obs.finance.last_year_income], dtype=np.int32),
+            "finance_last_year_expenses": np.array([obs.finance.last_year_expenses], dtype=np.int32),
+            "finance_last_year_net": np.array([obs.finance.last_year_net], dtype=np.int32),
+            # Population
+            "population_total": np.array([obs.population.total], dtype=np.int32),
+            "population_school_age": np.array([obs.population.school_age], dtype=np.int32),
+            "population_academy_age": np.array([obs.population.academy_age], dtype=np.int32),
+            "population_working_age": np.array([obs.population.working_age], dtype=np.int32),
+            "population_sentiment": np.array([obs.population.sentiment], dtype=np.int32),
+            # Labor
+            "labor_workers_needed": np.array([obs.labor.workers_needed], dtype=np.int32),
+            "labor_workers_employed": np.array([obs.labor.workers_employed], dtype=np.int32),
+            "labor_unemployment_percentage": np.array([obs.labor.unemployment_percentage], dtype=np.int32),
+            "labor_wages": np.array([obs.labor.wages], dtype=np.int32),
+            # Resources
+            "resources_food_stocks": np.array([obs.resources.food_stocks], dtype=np.int32),
+            "resources_food_types_available": np.array([obs.resources.food_types_available], dtype=np.int32),
+            # Buildings
+            "buildings_housing": np.array([obs.buildings.housing], dtype=np.int32),
+            "buildings_housing_capacity": np.array([obs.buildings.housing_capacity], dtype=np.int32),
+            # Migration
+            "migration_immigration_amount": np.array([obs.migration.immigration_amount], dtype=np.int32),
+            "migration_emigration_amount": np.array([obs.migration.emigration_amount], dtype=np.int32),
+            "migration_immigration_queue_size": np.array([obs.migration.immigration_queue_size], dtype=np.int32),
+            "migration_emigration_queue_size": np.array([obs.migration.emigration_queue_size], dtype=np.int32),
+            # Culture
+            "culture_entertainment": np.array([obs.culture.entertainment], dtype=np.int32),
+            "culture_average_entertainment": np.array([obs.culture.average_entertainment], dtype=np.int32),
+            "culture_average_education": np.array([obs.culture.average_education], dtype=np.int32),
+            "culture_average_health": np.array([obs.culture.average_health], dtype=np.int32),
+            "culture_religion_coverage": np.array([obs.culture.religion_coverage], dtype=np.int32),
+            # Time
+            "time_tick": np.array([obs.time.tick], dtype=np.int32),
+            "time_day": np.array([obs.time.day], dtype=np.int32),
+            "time_month": np.array([obs.time.month], dtype=np.int32),
+            "time_year": np.array([obs.time.year], dtype=np.int32),
+            "time_total_months": np.array([obs.time.total_months], dtype=np.int32),
+            # Victory
+            "victory_culture_goal": np.array([obs.victory.culture_goal], dtype=np.int32),
+            "victory_prosperity_goal": np.array([obs.victory.prosperity_goal], dtype=np.int32),
+            "victory_peace_goal": np.array([obs.victory.peace_goal], dtype=np.int32),
+            "victory_favor_goal": np.array([obs.victory.favor_goal], dtype=np.int32),
+            "victory_population_goal": np.array([obs.victory.population_goal], dtype=np.int32),
+            "victory_time_limit_years": np.array([obs.victory.time_limit_years], dtype=np.int32),
         }
 
     def _action_to_c(self, action: int) -> Action:
