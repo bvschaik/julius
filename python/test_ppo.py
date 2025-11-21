@@ -1,0 +1,47 @@
+#!/usr/bin/env python3
+"""Test PPO model creation with JuliusEnv"""
+
+import julius_gym
+import argparse
+from pathlib import Path
+from stable_baselines3 import PPO
+
+args = argparse.ArgumentParser()
+args.add_argument("--data-dir", type=Path, required=True, help="Path to Caesar3 directory")
+args.add_argument("--lib-path", type=Path, required=True, help="Path to libjulius_gym")
+args = args.parse_args()
+
+assert args.data_dir.exists(), f"Data directory {args.data_dir} does not exist"
+assert args.lib_path.exists(), f"Library file {args.lib_path} does not exist"
+
+print("Creating environment...")
+env = julius_gym.JuliusEnv(
+    data_directory=str(args.data_dir),
+    max_ticks=100,
+    lib_path=str(args.lib_path),
+)
+
+print("Environment created successfully!")
+
+print("\nCreating PPO model...")
+model = PPO("MultiInputPolicy", env, verbose=1)
+
+print("PPO model created successfully!")
+
+print("\nTraining for 10 timesteps...")
+model.learn(total_timesteps=1)
+
+print("Training successful!")
+
+print("\nRendering final city map...")
+try:
+    # Render and save the city map after training
+    env.render(mode="save", output_file="city_map_after_training.png")
+    print("City map rendered successfully!")
+except Exception as e:
+    print(f"Rendering failed: {e}")
+    import traceback
+    traceback.print_exc()
+
+env.close()
+print("\nTest passed!")
