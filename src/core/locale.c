@@ -108,6 +108,15 @@ language_type locale_determine_language(void)
     return data.last_determined_language;
 }
 
+language_type locale_last_determined_language(void)
+{
+    if (!data.last_determined_language) {
+        return LANGUAGE_UNKNOWN;
+    } else {
+        return data.last_determined_language;
+    }
+}
+
 int locale_year_before_ad(void)
 {
     // In all languages it's "200 AD" except for English
