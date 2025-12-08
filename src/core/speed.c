@@ -36,7 +36,7 @@ void speed_set_target(speed_type *speed, double new_speed, time_millis total_tim
         speed->desired_speed = new_speed;
         speed->current_speed = new_speed;
         speed->total_time = total_time;
-        if (!adjust_for_time && time_get_millis() - speed->last_speed_check > 0) {
+        if (!adjust_for_time && time_get_millis() != speed->last_speed_check) {
             speed->adjusted_current_speed = adjust_speed_for_frame_time(new_speed, 1, speed->last_speed_check);
         } else {
             speed->adjusted_current_speed = new_speed;
