@@ -4,7 +4,7 @@
 #include "core/file.h"
 #include "core/io.h"
 #include "core/string.h"
-#include <translation/translation.h>
+#include "translation/translation.h"
 
 #include <stdlib.h>
 #include <string.h>
