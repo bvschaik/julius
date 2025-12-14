@@ -53,4 +53,9 @@
 	<provides>
 		<binary>julius</binary>
 	</provides>
+	<keywords>
+		<keyword>open source caesar 3</keyword>
+		<keyword>caesar 3 alternative</keyword>
+		<keyword>open source simulation game</keyword>
+	</keywords>
 </component>
