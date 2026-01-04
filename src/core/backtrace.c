@@ -4,7 +4,7 @@
 
 #if defined(__GNUC__) && !defined(__MINGW32__) && !defined(__OpenBSD__) && \
     !defined(__vita__) && !defined(__SWITCH__) && !defined(__ANDROID__) && \
-    !defined(__HAIKU__) && !defined(__EMSCRIPTEN__) && \
+    !defined(__HAIKU__) && !defined(__EMSCRIPTEN__) && !defined(__CYGWIN__) && \
     (!defined(__ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__) || __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 1050)
 
 #include <execinfo.h>
