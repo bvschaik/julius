@@ -151,7 +151,7 @@ int city_migration_no_immigration_cause(void)
 
 int city_migration_no_room_for_immigrants(void)
 {
-    return city_data.migration.refused_immigrants_today || city_data.population.room_in_houses <= 0;
+    return city_data.population.room_in_houses <= 0;
 }
 
 int city_migration_percentage(void)
