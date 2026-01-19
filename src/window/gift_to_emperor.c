@@ -51,7 +51,7 @@ static void draw_background(void)
 static void draw_foreground(void)
 {
     graphics_in_dialog();
-
+    int current_gift = city_emperor_selected_gift_size();
     inner_panel_draw(112, 208, 28, 5);
 
     if (city_emperor_can_send_gift(GIFT_MODEST)) {
@@ -60,6 +60,9 @@ static void draw_foreground(void)
         font_t font = focus_button_id == 1 ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
         int width = lang_text_draw(52, 51 + gift->id, 224, 218, font);
         text_draw_money(gift->cost, 224 + width, 218, font);
+        if (current_gift == GIFT_MODEST) {
+            button_border_draw(120, 211, 428, 24, 1);
+        }
     } else {
         lang_text_draw_multiline(52, 70, 160, 224, 352, FONT_NORMAL_WHITE);
     }
@@ -69,6 +72,9 @@ static void draw_foreground(void)
         font_t font = focus_button_id == 2 ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
         int width = lang_text_draw(52, 55 + gift->id, 224, 238, font);
         text_draw_money(gift->cost, 224 + width, 238, font);
+        if (current_gift == GIFT_GENEROUS) {
+            button_border_draw(120, 231, 428, 24, 1);
+        }
     }
     if (city_emperor_can_send_gift(GIFT_LAVISH)) {
         const emperor_gift *gift = city_emperor_get_gift(GIFT_LAVISH);
@@ -76,6 +82,9 @@ static void draw_foreground(void)
         font_t font = focus_button_id == 3 ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
         int width = lang_text_draw(52, 59 + gift->id, 224, 258, font);
         text_draw_money(gift->cost, 224 + width, 258, font);
+        if (current_gift == GIFT_LAVISH) {
+            button_border_draw(120, 242, 428, 24, 1);
+        }
     }
     // can give at least one type
     if (city_emperor_can_send_gift(GIFT_MODEST)) {
