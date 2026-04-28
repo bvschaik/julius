@@ -7,11 +7,23 @@
 #include <stdio.h>
 #include <string.h>
 
+/*
+ * Stores the SDL game controller bindings associated with a mapping action.
+ *
+ * Unlike mapping_element, which describes a generic joystick input in terms of
+ * this project's JOYSTICK_ELEMENT_* representation, controller_mapping keeps
+ * the SDL_GameController-derived binding information returned by SDL for each
+ * action so it can be translated into the internal mapping format.
+ */
 typedef struct {
+    /* Action that the listed controller bindings should trigger. */
     mapping_action action;
     struct {
+        /* SDL binding kind for this entry (button, axis, hat, etc.). */
         SDL_GameControllerBindType type;
+        /* SDL identifier for the bound control, such as axis/button index. */
         int id;
+        /* Direction or position associated with the binding when applicable. */
         int position;
     } element[JOYSTICK_MAPPING_ELEMENTS_MAX];
 } controller_mapping;
@@ -292,7 +304,6 @@ static void remove_joystick(int instance_id)
                 SDL_Joystick *current_joystick = SDL_GameControllerGetJoystick(current_controller);
                 if (SDL_JoystickInstanceID(current_joystick) == instance_id) {
                     controller = current_controller;
-                    SDL_GameControllerClose(current_controller);
                     break;
                 }
                 SDL_GameControllerClose(current_controller);
@@ -300,7 +311,6 @@ static void remove_joystick(int instance_id)
                 SDL_Joystick *current_joystick = SDL_JoystickOpen(i);
                 if (SDL_JoystickInstanceID(current_joystick) == instance_id) {
                     joystick = current_joystick;
-                    SDL_JoystickClose(current_joystick);
                     break;
                 }
                 SDL_JoystickClose(current_joystick);
