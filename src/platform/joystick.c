@@ -28,8 +28,6 @@ typedef struct {
     } element[JOYSTICK_MAPPING_ELEMENTS_MAX];
 } controller_mapping;
 
-static int enabled;
-
 #ifdef __vita__
 #include "platform/vita/pad.h"
 
@@ -153,7 +151,7 @@ static int use_joystick(void)
 #if defined(__vita__) || defined(__SWITCH__) || defined(__ANDROID__)
     return 1;
 #else
-    return enabled;
+    return 0;
 #endif
 }
 
