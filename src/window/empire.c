@@ -578,7 +578,7 @@ static int get_tooltip_resource(tooltip_context *c)
         }
     }
     item_offset += lang_text_get_width(47, 4, FONT_NORMAL_GREEN);
-    for (int r = RESOURCE_MIN; r <= RESOURCE_MAX; r++) {
+    for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
         if (city->buys_resource[r]) {
             if (is_mouse_hit(c, x_offset + 110 + item_offset, y_offset + 33, 26)) {
                 return r;
