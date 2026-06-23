@@ -214,11 +214,9 @@ static int place_reservoir_and_aqueducts(
     }
     if (info->place_reservoir_at_start != PLACE_RESERVOIR_NO) {
         map_routing_block(x_start - 1, y_start - 1, 3);
-        mark_construction(x_start - 1, y_start - 1, 3, TERRAIN_ALL, 1);
     }
     if (info->place_reservoir_at_end != PLACE_RESERVOIR_NO) {
         map_routing_block(x_end - 1, y_end - 1, 3);
-        mark_construction(x_end - 1, y_end - 1, 3, TERRAIN_ALL, 1);
     }
     const int aqueduct_offsets_x[] = {0, 2, 0, -2};
     const int aqueduct_offsets_y[] = {-2, 0, 2, 0};
@@ -243,6 +241,12 @@ static int place_reservoir_and_aqueducts(
     }
     if (min_dist == 10000) {
         return 0;
+    }
+    if (info->place_reservoir_at_start != PLACE_RESERVOIR_NO) {
+        mark_construction(x_start - 1, y_start - 1, 3, TERRAIN_ALL, 1);
+    }
+    if (info->place_reservoir_at_end != PLACE_RESERVOIR_NO) {
+        mark_construction(x_end - 1, y_end - 1, 3, TERRAIN_ALL, 1);
     }
     int x_aq_start = aqueduct_offsets_x[min_dir_start];
     int y_aq_start = aqueduct_offsets_y[min_dir_start];
@@ -643,7 +647,6 @@ void building_construction_place(void)
     } else if (type == BUILDING_DRAGGABLE_RESERVOIR) {
         struct reservoir_info info;
         if (!place_reservoir_and_aqueducts(0, x_start, y_start, x_end, y_end, &info)) {
-            map_property_clear_constructing_and_deleted();
             city_warning_show(WARNING_CLEAR_LAND_NEEDED);
             return;
         }
