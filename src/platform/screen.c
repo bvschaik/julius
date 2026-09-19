@@ -104,17 +104,33 @@ int platform_screen_create(const char *title, int display_scale_percentage, int 
 #endif
     set_scale_percentage(display_scale_percentage, 0, 0);
 
-    int width, height;
+    if (display_id < 0 || display_id >= SDL_GetNumVideoDisplays()) {
+        SDL_Log("Defaulting to display 0 instead of %d (num displays: %d)", display_id, SDL_GetNumVideoDisplays());
+        display_id = 0;
+    }
+    SDL_DisplayMode mode;
+    if (SDL_GetDesktopDisplayMode(display_id, &mode) != 0) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to get display mode: %s", SDL_GetError());
+        return 0;
+    }
+
+    int width = mode.w;
+    int height = mode.h;
     int fullscreen = system_is_fullscreen_only() ? 1 : setting_fullscreen();
-    if (fullscreen) {
-        SDL_DisplayMode mode;
-        SDL_GetDesktopDisplayMode(0, &mode);
-        width = mode.w;
-        height = mode.h;
-    } else {
-        setting_window(&width, &height);
-        width = scale_logical_to_pixels(width);
-        height = scale_logical_to_pixels(height);
+    if (!fullscreen) {
+#if SDL_VERSION_ATLEAST(2, 0, 5)
+        SDL_Rect bounds;
+        if (SDL_GetDisplayUsableBounds(display_id, &bounds) == 0) {
+            width = bounds.w;
+            height = bounds.h;
+        }
+#endif
+        // Apply the requested scale before converting the saved logical window size.
+        apply_max_scale(width, height);
+        int logical_width, logical_height;
+        setting_window(&logical_width, &logical_height);
+        width = SDL_min(width, scale_logical_to_pixels(logical_width));
+        height = SDL_min(height, scale_logical_to_pixels(logical_height));
     }
 
     platform_screen_destroy();
@@ -126,10 +142,6 @@ int platform_screen_create(const char *title, int display_scale_percentage, int 
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
 #endif
 
-    if (display_id < 0 || display_id >= SDL_GetNumVideoDisplays()) {
-        SDL_Log("Defaulting to display 0 instead of %d (num displays: %d)", display_id, SDL_GetNumVideoDisplays());
-        display_id = 0;
-    }
     SDL_Log("Creating screen %d x %d on display %d, %s, driver: %s", width, height, display_id,
         fullscreen ? "fullscreen" : "windowed", SDL_GetCurrentVideoDriver());
     Uint32 flags = SDL_WINDOW_RESIZABLE;
@@ -150,9 +162,7 @@ int platform_screen_create(const char *title, int display_scale_percentage, int 
         return 0;
     }
 
-    if (system_is_fullscreen_only()) {
-        SDL_GetWindowSize(SDL.window, &width, &height);
-    }
+    SDL_GetWindowSize(SDL.window, &width, &height);
 
     SDL_Log("Creating renderer");
     SDL.renderer = SDL_CreateRenderer(SDL.window, -1, SDL_RENDERER_PRESENTVSYNC);
