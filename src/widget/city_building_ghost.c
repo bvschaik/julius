@@ -144,10 +144,19 @@ static void draw_regular_building(building_type type, int image_id, int x, int y
 {
     if (building_is_farm(type)) {
         draw_building(image_id, x, y);
+        int image_offset;
+        switch (type) {
+            default:
+            case BUILDING_WHEAT_FARM: image_offset = 0; break;
+            case BUILDING_VEGETABLE_FARM: image_offset = 5; break;
+            case BUILDING_FRUIT_FARM: image_offset = 10; break;
+            case BUILDING_OLIVE_FARM: image_offset = 15; break;
+            case BUILDING_VINES_FARM: image_offset = 20; break;
+            case BUILDING_PIG_FARM: image_offset = 25; break;
+        }
         // fields
         for (int i = 4; i < 9; i++) {
-            image_draw_isometric_footprint(image_id + 1,
-                x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_GREEN);
+            draw_building(image_id + 1 + image_offset, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i]);
         }
     } else if (type == BUILDING_WAREHOUSE) {
         draw_building(image_id, x, y);
