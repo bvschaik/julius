@@ -1,7 +1,7 @@
 #ifndef FILE_MANAGER_CACHE_H
 #define FILE_MANAGER_CACHE_H
 
-#if defined(__vita__) || defined(__SWITCH__)
+#if defined(__vita__) || defined(__SWITCH__) || defined(__WIIU__)
 #define USE_FILE_CACHE
 
 #include "core/file.h"

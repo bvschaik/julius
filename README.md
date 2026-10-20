@@ -34,6 +34,7 @@ Supported platforms:
 - MacOS
 - PS Vita
 - Nintendo Switch
+- Nintendo Wii U
 - Android
 - Any compatible browser (Emscripten)
 
