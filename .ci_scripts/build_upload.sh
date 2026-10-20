@@ -60,6 +60,11 @@ case "$DEPLOY" in
   DEPLOY_FILE=julius-$VERSION-switch.zip
   cp "release/julius_switch.zip" "deploy/$DEPLOY_FILE"
   ;;
+"wiiu")
+  PACKAGE=wiiu
+  DEPLOY_FILE=julius-$VERSION-wiiu.wuhb
+  cp "${build_dir}/julius.wuhb" "deploy/$DEPLOY_FILE"
+  ;;
 "android")
   PACKAGE=android
   if [ -f "${build_dir}/julius.apk" ]
