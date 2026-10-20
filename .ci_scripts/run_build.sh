@@ -12,6 +12,9 @@ case "$BUILD_TARGET" in
 	cp -f build/julius.nro release/julius/julius.nro
 	cd release && zip -r julius_switch.zip julius
 	;;
+"wiiu")
+	docker exec wiiudev /bin/bash -c "cd build && make -j4"
+	;;
 "mac")
 	cd build
 	make -j4

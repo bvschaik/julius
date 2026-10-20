@@ -11,6 +11,7 @@
 #include "platform/cursor.h"
 #include "platform/switch/switch.h"
 #include "platform/vita/vita.h"
+#include "platform/wiiu/wiiu.h"
 
 #include "SDL.h"
 
@@ -211,9 +212,15 @@ int platform_screen_resize(int pixel_width, int pixel_height)
     SDL_RenderSetLogicalSize(SDL.renderer, logical_width, logical_height);
 
     setting_set_display(setting_fullscreen(), logical_width, logical_height);
+#ifdef __WIIU__
+    // Cemu doesn't pick up changes to 1280 pixel wide textures
+    int texture_width = logical_width == 1280 ? 1288 : logical_width;
+#else
+    int texture_width = logical_width;
+#endif
     SDL.texture = SDL_CreateTexture(SDL.renderer,
         SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
-        logical_width, logical_height);
+        texture_width, logical_height);
 
     if (SDL.texture) {
         SDL_Log("Texture created: %d x %d", logical_width, logical_height);
@@ -392,13 +399,47 @@ void platform_screen_clear(void)
     SDL_RenderClear(SDL.renderer);
 }
 
+#ifdef __WIIU__
+// Canvas alpha is 0, which renders black on the Wii U
+static void update_texture_opaque(void)
+{
+    void *pixels;
+    int pitch;
+    int texture_width;
+    SDL_QueryTexture(SDL.texture, NULL, NULL, &texture_width, NULL);
+    if (SDL_LockTexture(SDL.texture, NULL, &pixels, &pitch) != 0) {
+        return;
+    }
+    const color_t *src = graphics_canvas();
+    int width = screen_width();
+    int height = screen_height();
+    for (int y = 0; y < height; y++) {
+        color_t *dst = (color_t *) ((uint8_t *) pixels + y * pitch);
+        for (int x = 0; x < width; x++) {
+            dst[x] = *src++ | ALPHA_OPAQUE;
+        }
+        for (int x = width; x < texture_width; x++) {
+            dst[x] = ALPHA_OPAQUE;
+        }
+    }
+    SDL_UnlockTexture(SDL.texture);
+}
+#endif
+
 void platform_screen_update(void)
 {
     SDL_RenderClear(SDL.renderer);
-#ifndef __vita__
+#ifdef __WIIU__
+    update_texture_opaque();
+#elif !defined(__vita__)
     SDL_UpdateTexture(SDL.texture, NULL, graphics_canvas(), screen_width() * 4);
 #endif
+#ifdef __WIIU__
+    SDL_Rect canvas = { 0, 0, screen_width(), screen_height() };
+    SDL_RenderCopy(SDL.renderer, SDL.texture, &canvas, NULL);
+#else
     SDL_RenderCopy(SDL.renderer, SDL.texture, NULL, NULL);
+#endif
 #ifdef PLATFORM_USE_SOFTWARE_CURSOR
     draw_software_mouse_cursor();
 #endif
@@ -436,7 +477,7 @@ void system_set_mouse_position(int *x, int *y)
 
 int system_is_fullscreen_only(void)
 {
-#if defined(__ANDROID__) || defined(__SWITCH__) || defined(__vita__)
+#if defined(__ANDROID__) || defined(__SWITCH__) || defined(__vita__) || defined(__WIIU__)
     return 1;
 #else
     return 0;

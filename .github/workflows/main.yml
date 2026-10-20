@@ -58,6 +58,10 @@ jobs:
             os: ubuntu-24.04
             BUILD_TARGET: vita
             DEPLOY: vita
+          - name: Nintendo Wii U
+            os: ubuntu-24.04
+            BUILD_TARGET: wiiu
+            DEPLOY: wiiu
           - name: Android
             os: ubuntu-24.04
             cache-key: android

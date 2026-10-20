@@ -33,6 +33,7 @@
 #include "platform/ios/ios.h"
 #include "platform/switch/switch.h"
 #include "platform/vita/vita.h"
+#include "platform/wiiu/wiiu.h"
 
 #if defined(_WIN32) || defined(__vita__) || defined(__SWITCH__) || defined(__ANDROID__)
 #include <string.h>
@@ -582,6 +583,8 @@ static void setup(const julius_args *args)
 
 #ifdef __vita__
     const char *base_dir = VITA_PATH_PREFIX;
+#elif defined(__WIIU__)
+    const char *base_dir = WIIU_PATH_PREFIX;
 #else
     const char *base_dir = args->data_directory;
 #endif
@@ -638,7 +641,8 @@ int main(int argc, char **argv)
 {
     julius_args args;
     if (!platform_parse_arguments(argc, argv, &args)) {
-#if !defined(_WIN32) && !defined(__vita__) && !defined(__SWITCH__) && !defined(__ANDROID__) && !defined(__APPLE__)
+#if !defined(_WIN32) && !defined(__vita__) && !defined(__SWITCH__) && !defined(__ANDROID__) && !defined(__APPLE__) && \
+    !defined(__WIIU__)
         // Only exit on Linux platforms where we know the system will not throw any weird arguments our way
         exit_with_status(1);
 #endif

@@ -7,6 +7,9 @@ case "$BUILD_TARGET" in
 "switch")
 	docker exec switchdev /bin/bash -c "git config --global --add safe.directory /build/git && /opt/devkitpro/portlibs/switch/bin/aarch64-none-elf-cmake -DCMAKE_BUILD_TYPE=Release -DTARGET_PLATFORM=switch -B build -S ."
 	;;
+"wiiu")
+	docker exec wiiudev /bin/bash -c "git config --global --add safe.directory /build/git && /opt/devkitpro/portlibs/wiiu/bin/powerpc-eabi-cmake -DCMAKE_BUILD_TYPE=Release -DTARGET_PLATFORM=wiiu -B build -S ."
+	;;
 "mac")
 	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DSYSTEM_LIBS=OFF -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" ..
 	;;
