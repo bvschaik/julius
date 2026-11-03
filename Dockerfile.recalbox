@@ -1,35 +1,26 @@
 # syntax=docker/dockerfile:1
 
-# --- Временный этап: получаем официальный arm64 файл без парсинга ---
 FROM --platform=linux/arm64 docker.io/library/ubuntu:24.04 AS arm64-source
 
-# --- Основной этап сборки на x86_64 хосте ---
 FROM docker.io/library/ubuntu:24.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# 1. Глобально отключаем проверку SSL для APT
 RUN echo 'Acquire::https::Verify-Peer "false";' > /etc/apt/apt.conf.d/99verify-ssl && \
     echo 'Acquire::https::Verify-Host "false";' >> /etc/apt/apt.conf.d/99verify-ssl
 
-# 2. Устанавливаем эмулятор QEMU и нативный Python хоста ДО включения multiarch.
-#    Это позволит запускать arm64-скрипты автоматизации пакетов во время их распаковки.
 RUN apt-get update && apt-get install -y \
     qemu-user-static \
     python3-minimal \
     && rm -rf /var/lib/apt/lists/*
 
-# 3. Пересобираем репозитории на основе оригинальных файлов систем
 RUN dpkg --add-architecture arm64 && \
     sed -i '/^Types: deb/a Architectures: amd64' /etc/apt/sources.list.d/ubuntu.sources
 
-# Копируем оригинальный, чистый файл из arm64 образа прямо в систему под именем arm64.sources
 COPY --from=arm64-source /etc/apt/sources.list.d/ubuntu.sources /etc/apt/sources.list.d/arm64.sources
 
-# Жестко зажимаем скопированный файл под архитектуру arm64
 RUN sed -i '/^Types: deb/a Architectures: arm64' /etc/apt/sources.list.d/arm64.sources
 
-# 4. Теперь обновление кэша и установка пройдут без ошибок Exec format error
 RUN apt-get update && apt-get install -y \
     build-essential \
     cmake \
@@ -41,7 +32,6 @@ RUN apt-get update && apt-get install -y \
     libpng-dev:arm64 \
     && rm -rf /var/lib/apt/lists/*
 
-# 5. Переменные окружения для кросс-компиляции под Recalbox 10.1 (glibc 2.39)
 ENV CC=aarch64-linux-gnu-gcc
 ENV CXX=aarch64-linux-gnu-g++
 ENV STRIP=aarch64-linux-gnu-strip
@@ -49,7 +39,6 @@ ENV PKG_CONFIG_PATH=/usr/lib/aarch64-linux-gnu/pkgconfig
 
 WORKDIR /src
 
-# 6. Точка входа для сборки проекта в примонтированной папке
 ENTRYPOINT ["/bin/bash", "-c", "\
     cmake -B build \
         -DCMAKE_SYSTEM_NAME=Linux \
