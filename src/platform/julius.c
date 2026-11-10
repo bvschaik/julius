@@ -10,6 +10,7 @@
 #include "game/settings.h"
 #include "game/system.h"
 #include "graphics/screen.h"
+#include "input/joystick.h"
 #include "input/mouse.h"
 #include "input/touch.h"
 #include "platform/arguments.h"
@@ -287,11 +288,17 @@ static void handle_event(SDL_Event *event)
             break;
         case SDL_MOUSEMOTION:
             if (event->motion.which != SDL_TOUCH_MOUSEID && !SDL_GetRelativeMouseMode()) {
+                // Warping the cursor from a joystick generates motion events to the same position,
+                // so only treat significant movement as real mouse usage
+                if (abs(event->motion.x - mouse_get()->x) > 2 || abs(event->motion.y - mouse_get()->y) > 2) {
+                    joystick_deactivate_cursor();
+                }
                 mouse_set_position(event->motion.x, event->motion.y);
             }
             break;
         case SDL_MOUSEBUTTONDOWN:
             if (event->button.which != SDL_TOUCH_MOUSEID) {
+                joystick_deactivate_cursor();
                 handle_mouse_button(&event->button, 1);
             }
             break;

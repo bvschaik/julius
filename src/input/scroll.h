@@ -24,6 +24,12 @@ int scroll_drag_end(void);
 
 void scroll_stop(void);
 
+/**
+ * Behaves as if the mouse cursor were pushed against the given screen edges (e.g. from a joystick),
+ * regardless of the actual cursor position
+ */
+void scroll_set_virtual_edge(int top, int left, int bottom, int right);
+
 void scroll_arrow_left(int value);
 void scroll_arrow_right(int value);
 void scroll_arrow_up(int value);

@@ -52,6 +52,17 @@ typedef enum {
     MAPPING_ACTION_CYCLE_LEGION,
     MAPPING_ACTION_SHOW_VIRTUAL_KEYBOARD,
     MAPPING_ACTION_CYCLE_TOUCH_TYPE,
+    MAPPING_ACTION_TOGGLE_SLOW_GAME_SPEED,
+    MAPPING_ACTION_SHOW_OVERLAY_PROBLEMS,
+    MAPPING_ACTION_SHOW_OVERLAY_FIRE,
+    MAPPING_ACTION_SHOW_OVERLAY_DAMAGE,
+    MAPPING_ACTION_SHOW_OVERLAY_CRIME,
+    MAPPING_ACTION_SHOW_OVERLAY_WATER,
+    MAPPING_ACTION_SAVE_FILE,
+    MAPPING_ACTION_SHOW_EMPIRE,
+    MAPPING_ACTION_PREVIOUS_QUICK_KEY,
+    MAPPING_ACTION_NEXT_QUICK_KEY,
+    MAPPING_ACTION_PRESS_QUICK_KEY,
     MAPPING_ACTION_RESET_MAPPING,
     MAPPING_ACTION_MAX
 } mapping_action;
@@ -84,5 +95,16 @@ int joystick_remove(int joystick_id);
 void joystick_update_element(int joystick_id, joystick_element element, int element_id, int value1, int value2);
 
 int joystick_to_mouse_and_keyboard(void);
+
+/**
+ * Whether the mouse cursor is currently being driven by a joystick,
+ * which means a software cursor should be drawn on platforms without a hardware one
+ */
+int joystick_is_cursor_active(void);
+
+/**
+ * Stops showing the joystick-driven cursor, e.g. when a real mouse is used
+ */
+void joystick_deactivate_cursor(void);
 
 #endif // INPUT_JOYSTICK_H

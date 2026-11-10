@@ -76,6 +76,12 @@ static struct {
         int width;
         int height;
     } limits;
+    struct {
+        int top;
+        int left;
+        int bottom;
+        int right;
+    } virtual_edge;
 } data;
 
 static void clear_scroll_speed(void)
@@ -347,6 +353,14 @@ static int get_direction(const mouse *m)
         // rightmost and bottommost pixel, even though we have grabbed the mouse.
         is_inside_active_window = 1;
     }
+    if (data.virtual_edge.top || data.virtual_edge.left || data.virtual_edge.bottom || data.virtual_edge.right) {
+        // Same as the mouse cursor pushed against the middle of a screen edge
+        data.constant_input = 0;
+        data.speed.modifier_x = 0.0f;
+        data.speed.modifier_y = 0.0f;
+        return direction_from_sides(data.virtual_edge.top, data.virtual_edge.left,
+            data.virtual_edge.bottom, data.virtual_edge.right);
+    }
     if (!is_inside_active_window && !m->is_touch) {
         return DIR_8_NONE;
     }
@@ -510,6 +524,14 @@ void scroll_stop(void)
     data.constant_input = 0;
     data.drag.active = 0;
     data.limits.active = 0;
+}
+
+void scroll_set_virtual_edge(int top, int left, int bottom, int right)
+{
+    data.virtual_edge.top = top;
+    data.virtual_edge.left = left;
+    data.virtual_edge.bottom = bottom;
+    data.virtual_edge.right = right;
 }
 
 void scroll_arrow_left(int value)

@@ -335,3 +335,12 @@ void window_file_dialog_show(file_type type, file_dialog_type dialog_type)
     init(type, dialog_type);
     window_show(&window);
 }
+
+void window_file_dialog_show_with_name(file_type type, file_dialog_type dialog_type, const char *name_utf8)
+{
+    window_file_dialog_show(type, dialog_type);
+    encoding_from_utf8(name_utf8, data.typed_name, FILE_NAME_MAX);
+    string_copy(data.typed_name, data.previously_seen_typed_name, FILE_NAME_MAX);
+    input_box_refresh_text(&file_name_input);
+    scroll_to_typed_text();
+}

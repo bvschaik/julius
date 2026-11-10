@@ -16,5 +16,8 @@ int android_remove_file(const char *filename);
 void platform_show_virtual_keyboard(void);
 void platform_hide_virtual_keyboard(void);
 
+// Android has no visible hardware cursor without a mouse, so draw one while a gamepad controls it
+#define PLATFORM_USE_JOYSTICK_SOFTWARE_CURSOR
+
 #endif // __ANDROID__
 #endif // PLATFORM_ANDROID_H

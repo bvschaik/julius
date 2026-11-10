@@ -7,6 +7,7 @@
 #include "graphics/graphics.h"
 #include "graphics/screen.h"
 #include "input/cursor.h"
+#include "input/joystick.h"
 #include "platform/android/android.h"
 #include "platform/cursor.h"
 #include "platform/switch/switch.h"
@@ -349,10 +350,15 @@ void platform_screen_center_window(void)
     window_pos.centered = 1;
 }
 
-#ifdef PLATFORM_USE_SOFTWARE_CURSOR
+#if defined(PLATFORM_USE_SOFTWARE_CURSOR) || defined(PLATFORM_USE_JOYSTICK_SOFTWARE_CURSOR)
 static void draw_software_mouse_cursor(void)
 {
     const mouse *mouse = mouse_get();
+#ifdef PLATFORM_USE_JOYSTICK_SOFTWARE_CURSOR
+    if (!joystick_is_cursor_active()) {
+        return;
+    }
+#endif
     if (!mouse->is_touch) {
         cursor_shape current_cursor_shape = platform_cursor_get_current_shape();
         const cursor *c = input_cursor_data(current_cursor_shape, platform_cursor_get_current_scale());
@@ -399,7 +405,7 @@ void platform_screen_update(void)
     SDL_UpdateTexture(SDL.texture, NULL, graphics_canvas(), screen_width() * 4);
 #endif
     SDL_RenderCopy(SDL.renderer, SDL.texture, NULL, NULL);
-#ifdef PLATFORM_USE_SOFTWARE_CURSOR
+#if defined(PLATFORM_USE_SOFTWARE_CURSOR) || defined(PLATFORM_USE_JOYSTICK_SOFTWARE_CURSOR)
     draw_software_mouse_cursor();
 #endif
 }
@@ -431,7 +437,11 @@ void system_set_mouse_position(int *x, int *y)
 {
     *x = calc_bound(*x, 0, screen_width() - 1);
     *y = calc_bound(*y, 0, screen_height() - 1);
+#ifndef __ANDROID__
+    // Android cannot warp the pointer: SDL instead emits a synthetic motion event with
+    // wrongly scaled coordinates, which drags the cursor towards the top-left corner
     SDL_WarpMouseInWindow(SDL.window, scale_logical_to_pixels(*x), scale_logical_to_pixels(*y));
+#endif
 }
 
 int system_is_fullscreen_only(void)

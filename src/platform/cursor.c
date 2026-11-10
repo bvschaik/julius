@@ -3,6 +3,7 @@
 #include "game/system.h"
 #include "graphics/color.h"
 #include "input/cursor.h"
+#include "platform/android/android.h"
 #include "platform/screen.h"
 #include "platform/switch/switch.h"
 #include "platform/vita/vita.h"
@@ -67,6 +68,9 @@ void system_init_cursors(int scale_percentage)
         data.surfaces[i] = generate_cursor_surface(c);
 #ifndef PLATFORM_USE_SOFTWARE_CURSOR
         data.cursors[i] = SDL_CreateColorCursor(data.surfaces[i], c->hotspot_x, c->hotspot_y);
+#ifdef PLATFORM_USE_JOYSTICK_SOFTWARE_CURSOR
+        platform_screen_generate_mouse_cursor_texture(i, data.current_scale, data.surfaces[i]->pixels);
+#endif
 #else
         SDL_ShowCursor(SDL_DISABLE);
         platform_screen_generate_mouse_cursor_texture(i, data.current_scale, data.surfaces[i]->pixels);

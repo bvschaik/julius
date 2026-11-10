@@ -1,18 +1,24 @@
 #include "joystick.h"
 
+#include "city/warning.h"
 #include "core/log.h"
 #include "core/speed.h"
 #include "core/time.h"
+#include "game/settings.h"
 #include "game/system.h"
 #include "graphics/window.h"
 #include "input/hotkey.h"
 #include "input/keyboard.h"
 #include "input/mouse.h"
 #include "input/scroll.h"
+#include "window/empire.h"
+#include "window/file_dialog.h"
 
 #include <math.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #define HOTKEY_OFFSET MAPPING_ACTION_ROTATE_MAP_LEFT
 #define MAX_HOTKEYS 6
@@ -28,6 +34,53 @@
 
 // Note: this ratio is untested and may be under or oversensitive
 #define TRACKBALL_TO_AXIS_RATIO 5
+
+// Axis elements (e.g. triggers) bound to button-like actions must be pressed at least this far
+#define DIGITAL_AXIS_THRESHOLD 12000
+
+#ifdef __ANDROID__
+#define USE_ANALOG_CURSOR
+#endif
+
+/*
+ * Analog cursor parameters (used when USE_ANALOG_CURSOR is defined)
+ *
+ * JOYSTICK_CURSOR_THRESHOLD:
+ *     stick deflection (0.0 - 1.0) below which the cursor does not move at all
+ * JOYSTICK_CURSOR_CURVE:
+ *     response curve exponent; values above 1 give finer control for small stick deflections
+ * JOYSTICK_CURSOR_MIN_SPEED / JOYSTICK_CURSOR_MAX_SPEED:
+ *     cursor speed in pixels per second just past the threshold / at full deflection
+ * JOYSTICK_CURSOR_START_SPEED_FACTOR:
+ *     fraction of the speed applied when the stick is first moved (start of acceleration)
+ * JOYSTICK_CURSOR_ACCELERATION_TIME:
+ *     time in milliseconds for the cursor to ramp up from the start speed to full speed
+ */
+#define JOYSTICK_CURSOR_THRESHOLD 0.15f
+#define JOYSTICK_CURSOR_CURVE 2.0f
+#define JOYSTICK_CURSOR_MIN_SPEED 30.0f
+#define JOYSTICK_CURSOR_MAX_SPEED 1000.0f
+#define JOYSTICK_CURSOR_START_SPEED_FACTOR 0.3f
+#define JOYSTICK_CURSOR_ACCELERATION_TIME 700
+
+#ifdef __ANDROID__
+/*
+ * Map scrolling emulates the mouse cursor pushed against one of the 4 screen edges
+ *
+ * JOYSTICK_MAP_SCROLL_THRESHOLD:
+ *     stick deflection (0.0 - 1.0) needed to start scrolling
+ * JOYSTICK_MAP_SCROLL_RELEASE_THRESHOLD:
+ *     deflection below which scrolling stops again (lower than the start threshold to avoid flicker)
+ * JOYSTICK_MAP_SCROLL_HYSTERESIS:
+ *     extra angle (degrees) past the 45 degree border before the scroll direction changes
+ */
+#define USE_EDGE_SCROLL_EMULATION
+#define JOYSTICK_MAP_SCROLL_THRESHOLD 0.5f
+#define JOYSTICK_MAP_SCROLL_RELEASE_THRESHOLD 0.4f
+#define JOYSTICK_MAP_SCROLL_HYSTERESIS 15.0f
+#endif
+
+#define NUM_QUICK_KEYS 12
 
 typedef int joystick_axis;
 typedef int joystick_button;
@@ -102,10 +155,52 @@ static struct {
         time_millis last_scroll_time;
     } mouse;
     mapped_input map_scroll[NUM_DIRECTIONS];
+    int map_scroll_edge;
     mapped_input joystick_hotkey[MAX_HOTKEYS];
     mapped_input virtual_keyboard;
     mapped_input touch_mode;
+    mapped_input emulated_keys[MAPPING_ACTION_MAX];
+    mapped_input slow_speed_toggle;
+    mapped_input show_empire;
+    mapped_input save_file;
+    struct {
+        int selected;
+        mapped_input previous;
+        mapped_input next;
+    } quick_key;
+    struct {
+        int active;
+        time_millis last_time;
+        time_millis move_start_time;
+        float remainder_x;
+        float remainder_y;
+    } cursor;
 } data;
+
+typedef struct {
+    mapping_action action;
+    key_type key;
+    key_modifier_type modifiers;
+} emulated_key;
+
+static const emulated_key EMULATED_KEYS[] = {
+    {MAPPING_ACTION_SHOW_OVERLAY_PROBLEMS, KEY_TYPE_T, KEY_MOD_NONE},
+    {MAPPING_ACTION_SHOW_OVERLAY_FIRE, KEY_TYPE_F, KEY_MOD_NONE},
+    {MAPPING_ACTION_SHOW_OVERLAY_DAMAGE, KEY_TYPE_D, KEY_MOD_NONE},
+    {MAPPING_ACTION_SHOW_OVERLAY_CRIME, KEY_TYPE_C, KEY_MOD_NONE},
+    {MAPPING_ACTION_SHOW_OVERLAY_WATER, KEY_TYPE_W, KEY_MOD_NONE},
+};
+
+#define NUM_EMULATED_KEYS (sizeof(EMULATED_KEYS) / sizeof(emulated_key))
+
+static const struct {
+    key_type key;
+    const char *name;
+} QUICK_KEYS[NUM_QUICK_KEYS] = {
+    {KEY_TYPE_1, "1"}, {KEY_TYPE_2, "2"}, {KEY_TYPE_3, "3"}, {KEY_TYPE_4, "4"},
+    {KEY_TYPE_5, "5"}, {KEY_TYPE_6, "6"}, {KEY_TYPE_7, "7"}, {KEY_TYPE_8, "8"},
+    {KEY_TYPE_9, "9"}, {KEY_TYPE_0, "0"}, {KEY_TYPE_MINUS, "-"}, {KEY_TYPE_EQUALS, "="}
+};
 
 static hotkey_action JOYSTICK_MAPPING_TO_HOTKEY_ACTION[MAX_HOTKEYS] = {
     HOTKEY_ROTATE_MAP_LEFT,
@@ -217,6 +312,10 @@ int joystick_remove(int joystick_id)
     joystick->model = 0;
     reset_joystick_state(joystick);
     data.connected_joysticks--;
+    if (data.map_scroll_edge) {
+        data.map_scroll_edge = 0;
+        scroll_set_virtual_edge(0, 0, 0, 0);
+    }
     log_info("Joystick removed with name", name, 0);
     return 1;
 }
@@ -347,6 +446,25 @@ static void set_input_state(mapped_input *input)
     }
 }
 
+static int is_analog_action(mapping_action action)
+{
+    switch (action) {
+        case MAPPING_ACTION_MOUSE_CURSOR_UP:
+        case MAPPING_ACTION_MOUSE_CURSOR_LEFT:
+        case MAPPING_ACTION_MOUSE_CURSOR_DOWN:
+        case MAPPING_ACTION_MOUSE_CURSOR_RIGHT:
+        case MAPPING_ACTION_SCROLL_WINDOW_UP:
+        case MAPPING_ACTION_SCROLL_WINDOW_DOWN:
+        case MAPPING_ACTION_SCROLL_MAP_UP:
+        case MAPPING_ACTION_SCROLL_MAP_LEFT:
+        case MAPPING_ACTION_SCROLL_MAP_DOWN:
+        case MAPPING_ACTION_SCROLL_MAP_RIGHT:
+            return 1;
+        default:
+            return 0;
+    }
+}
+
 static int get_joystick_input_for_action(mapping_action action, mapped_input *input)
 {
     static mapped_input dummy_input = {0};
@@ -364,10 +482,17 @@ static int get_joystick_input_for_action(mapping_action action, mapped_input *in
         }
         const joystick_model *model = joystick->model;
         for (int j = 0; j < model->num_mappings; j++) {
-            if (model->mapping[j].action == action && get_input_for_mapping(joystick, &model->mapping[j], input)) {
-                set_input_state(input);
-                return 1;
+            if (model->mapping[j].action != action || !get_input_for_mapping(joystick, &model->mapping[j], input)) {
+                continue;
             }
+            if (input->element == JOYSTICK_ELEMENT_AXIS && input->value < DIGITAL_AXIS_THRESHOLD &&
+                !is_analog_action(action)) {
+                input->value = 0;
+                input->element = JOYSTICK_ELEMENT_NONE;
+                continue;
+            }
+            set_input_state(input);
+            return 1;
         }
     }
     set_input_state(input);
@@ -490,6 +615,81 @@ static int translate_mapping_reset(void)
     return get_joystick_input_for_action(MAPPING_ACTION_RESET_MAPPING, 0);
 }
 
+#ifdef USE_ANALOG_CURSOR
+static void reset_analog_cursor(void)
+{
+    data.cursor.move_start_time = 0;
+    data.cursor.remainder_x = 0.0f;
+    data.cursor.remainder_y = 0.0f;
+}
+
+static int translate_mouse_cursor_position(void)
+{
+    mapped_input cursor_input[NUM_DIRECTIONS] = {0};
+
+    time_millis now = time_get_millis();
+    time_millis elapsed = data.cursor.last_time ? now - data.cursor.last_time : 0;
+    data.cursor.last_time = now;
+    if (elapsed > 100) {
+        elapsed = 100;
+    }
+
+    int handled = get_joystick_input_for_action(MAPPING_ACTION_MOUSE_CURSOR_UP, &cursor_input[DIRECTION_UP]);
+    handled |= get_joystick_input_for_action(MAPPING_ACTION_MOUSE_CURSOR_LEFT, &cursor_input[DIRECTION_LEFT]);
+    handled |= get_joystick_input_for_action(MAPPING_ACTION_MOUSE_CURSOR_DOWN, &cursor_input[DIRECTION_DOWN]);
+    handled |= get_joystick_input_for_action(MAPPING_ACTION_MOUSE_CURSOR_RIGHT, &cursor_input[DIRECTION_RIGHT]);
+    if (!handled) {
+        reset_analog_cursor();
+        return 0;
+    }
+    for (int i = 0; i < NUM_DIRECTIONS; i++) {
+        translate_input_for_element(&cursor_input[i], JOYSTICK_ELEMENT_AXIS);
+    }
+
+    float x = (float) (cursor_input[DIRECTION_RIGHT].value - cursor_input[DIRECTION_LEFT].value) / AXIS_MAX_VALUE;
+    float y = (float) (cursor_input[DIRECTION_DOWN].value - cursor_input[DIRECTION_UP].value) / AXIS_MAX_VALUE;
+    float magnitude = sqrtf(x * x + y * y);
+    if (magnitude <= JOYSTICK_CURSOR_THRESHOLD) {
+        reset_analog_cursor();
+        return 0;
+    }
+    // Unit direction vector of the stick
+    float dir_x = x / magnitude;
+    float dir_y = y / magnitude;
+    if (magnitude > 1.0f) {
+        magnitude = 1.0f;
+    }
+    if (!data.cursor.move_start_time) {
+        data.cursor.move_start_time = now;
+    }
+
+    // Deflection past the threshold, rescaled to 0..1 and shaped by the response curve
+    float deflection = (magnitude - JOYSTICK_CURSOR_THRESHOLD) / (1.0f - JOYSTICK_CURSOR_THRESHOLD);
+    float speed = JOYSTICK_CURSOR_MIN_SPEED +
+        (JOYSTICK_CURSOR_MAX_SPEED - JOYSTICK_CURSOR_MIN_SPEED) * powf(deflection, JOYSTICK_CURSOR_CURVE);
+
+    // Acceleration: the cursor starts slow and speeds up while the stick is held
+    float acceleration = 1.0f;
+    time_millis held = now - data.cursor.move_start_time;
+    if (held < JOYSTICK_CURSOR_ACCELERATION_TIME) {
+        acceleration = JOYSTICK_CURSOR_START_SPEED_FACTOR +
+            (1.0f - JOYSTICK_CURSOR_START_SPEED_FACTOR) * held / JOYSTICK_CURSOR_ACCELERATION_TIME;
+    }
+
+    float distance = speed * acceleration * elapsed / 1000.0f;
+    float move_x = data.cursor.remainder_x + dir_x * distance;
+    float move_y = data.cursor.remainder_y + dir_y * distance;
+    int delta_x = (int) move_x;
+    int delta_y = (int) move_y;
+    data.cursor.remainder_x = move_x - delta_x;
+    data.cursor.remainder_y = move_y - delta_y;
+
+    if (delta_x || delta_y) {
+        system_move_mouse_cursor(delta_x, delta_y);
+    }
+    return 1;
+}
+#else
 static int translate_mouse_cursor_position(void)
 {
     mapped_input cursor_input[NUM_DIRECTIONS] = {0};
@@ -538,6 +738,7 @@ static int translate_mouse_cursor_position(void)
     system_move_mouse_cursor(delta_x, delta_y);
     return 1;
 }
+#endif
 
 static int translate_mouse_button_presses(void)
 {
@@ -617,6 +818,67 @@ static int translate_window_scrolling(void)
     }
 }
 
+#ifdef USE_EDGE_SCROLL_EMULATION
+/*
+ * The stick acts exactly like the mouse cursor pushed against the middle of one of the
+ * four screen edges: only 4 directions, at the regular edge scrolling speed.
+ * The current edge is kept until the stick clearly points elsewhere (hysteresis).
+ */
+static int get_edge_for_stick(float x, float y)
+{
+    float magnitude = sqrtf(x * x + y * y);
+    int current = data.map_scroll_edge;
+    float threshold = current ? JOYSTICK_MAP_SCROLL_RELEASE_THRESHOLD : JOYSTICK_MAP_SCROLL_THRESHOLD;
+    if (magnitude < threshold) {
+        return 0;
+    }
+    float angle = atan2f(y, x) * 180.0f / 3.14159265f; // 0 = right, 90 = down
+    if (angle < 0.0f) {
+        angle += 360.0f;
+    }
+    // Edges: 1 = right, 2 = bottom, 3 = left, 4 = top
+    int nearest = ((int) ((angle + 45.0f) / 90.0f)) % 4 + 1;
+    if (current && current != nearest) {
+        float center = (current - 1) * 90.0f;
+        float diff = fabsf(fmodf(angle - center + 540.0f, 360.0f) - 180.0f);
+        if (diff <= 45.0f + JOYSTICK_MAP_SCROLL_HYSTERESIS) {
+            return current;
+        }
+    }
+    return nearest;
+}
+
+static int translate_map_scrolling(void)
+{
+    if (!window_has_map_scrolling()) {
+        if (data.map_scroll_edge) {
+            data.map_scroll_edge = 0;
+            scroll_set_virtual_edge(0, 0, 0, 0);
+        }
+        return 0;
+    }
+    mapped_input inputs[NUM_DIRECTIONS] = {0};
+    int handled = get_joystick_input_for_action(MAPPING_ACTION_SCROLL_MAP_UP, &inputs[DIRECTION_UP]);
+    handled |= get_joystick_input_for_action(MAPPING_ACTION_SCROLL_MAP_LEFT, &inputs[DIRECTION_LEFT]);
+    handled |= get_joystick_input_for_action(MAPPING_ACTION_SCROLL_MAP_DOWN, &inputs[DIRECTION_DOWN]);
+    handled |= get_joystick_input_for_action(MAPPING_ACTION_SCROLL_MAP_RIGHT, &inputs[DIRECTION_RIGHT]);
+
+    int edge = 0;
+    if (handled) {
+        for (int i = 0; i < NUM_DIRECTIONS; i++) {
+            translate_input_for_element(&inputs[i], JOYSTICK_ELEMENT_AXIS);
+        }
+        float x = (float) (inputs[DIRECTION_RIGHT].value - inputs[DIRECTION_LEFT].value) / AXIS_MAX_VALUE;
+        float y = (float) (inputs[DIRECTION_DOWN].value - inputs[DIRECTION_UP].value) / AXIS_MAX_VALUE;
+        edge = get_edge_for_stick(x, y);
+    }
+    if (edge != data.map_scroll_edge) {
+        data.map_scroll_edge = edge;
+        scroll_set_virtual_edge(edge == 4, edge == 3, edge == 2, edge == 1);
+    }
+    return edge != 0;
+}
+#else
 static int translate_map_scrolling(void)
 {
     if (!window_has_map_scrolling()) {
@@ -666,6 +928,7 @@ static int translate_map_scrolling(void)
 
     return 1;
 }
+#endif
 
 static int translate_hotkeys(void)
 {
@@ -682,6 +945,127 @@ static int translate_hotkeys(void)
         }
     }
     return handled;
+}
+
+static int translate_emulated_keys(void)
+{
+    int handled = 0;
+    for (unsigned int i = 0; i < NUM_EMULATED_KEYS; i++) {
+        const emulated_key *k = &EMULATED_KEYS[i];
+        mapped_input *input = &data.emulated_keys[k->action];
+        if (get_joystick_input_for_action(k->action, input)) {
+            handled = 1;
+            if (input->state == INPUT_STATE_WENT_DOWN) {
+                hotkey_key_pressed(k->key, k->modifiers, 0);
+            }
+        } else if (input->state == INPUT_STATE_WENT_UP) {
+            hotkey_key_released(k->key, k->modifiers);
+        }
+    }
+    return handled;
+}
+
+static void show_city_message(const char *text)
+{
+    if (!window_is(WINDOW_CITY) && !window_is(WINDOW_CITY_MILITARY)) {
+        return;
+    }
+    city_warning_clear_all();
+    city_warning_show_custom((const uint8_t *) text);
+}
+
+static void select_quick_key(int offset)
+{
+    data.quick_key.selected = (data.quick_key.selected + offset + NUM_QUICK_KEYS) % NUM_QUICK_KEYS;
+    // Selecting a key also presses it
+    key_type key = QUICK_KEYS[data.quick_key.selected].key;
+    hotkey_key_pressed(key, KEY_MOD_NONE, 0);
+    hotkey_key_released(key, KEY_MOD_NONE);
+    char text[32];
+    snprintf(text, sizeof(text), "Key: %s", QUICK_KEYS[data.quick_key.selected].name);
+    show_city_message(text);
+}
+
+static int translate_quick_keys(void)
+{
+    int handled = 0;
+    if (get_joystick_input_for_action(MAPPING_ACTION_PREVIOUS_QUICK_KEY, &data.quick_key.previous)) {
+        handled = 1;
+        if (data.quick_key.previous.state == INPUT_STATE_WENT_DOWN) {
+            select_quick_key(-1);
+        }
+    }
+    if (get_joystick_input_for_action(MAPPING_ACTION_NEXT_QUICK_KEY, &data.quick_key.next)) {
+        handled = 1;
+        if (data.quick_key.next.state == INPUT_STATE_WENT_DOWN) {
+            select_quick_key(1);
+        }
+    }
+    mapped_input *press = &data.emulated_keys[MAPPING_ACTION_PRESS_QUICK_KEY];
+    key_type key = QUICK_KEYS[data.quick_key.selected].key;
+    if (get_joystick_input_for_action(MAPPING_ACTION_PRESS_QUICK_KEY, press)) {
+        handled = 1;
+        if (press->state == INPUT_STATE_WENT_DOWN) {
+            hotkey_key_pressed(key, KEY_MOD_NONE, 0);
+        }
+    } else if (press->state == INPUT_STATE_WENT_UP) {
+        hotkey_key_released(key, KEY_MOD_NONE);
+    }
+    return handled;
+}
+
+static int translate_game_speed_toggle(void)
+{
+    if (!get_joystick_input_for_action(MAPPING_ACTION_TOGGLE_SLOW_GAME_SPEED, &data.slow_speed_toggle)) {
+        return 0;
+    }
+    if (data.slow_speed_toggle.state == INPUT_STATE_WENT_DOWN) {
+        int speed = setting_game_speed() == 70 ? 100 : 70;
+        setting_reset_speeds(speed, setting_scroll_speed());
+        char text[32];
+        snprintf(text, sizeof(text), "Speed: %d%%", speed);
+        show_city_message(text);
+    }
+    return 1;
+}
+
+static int is_city_window(void)
+{
+    return window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY);
+}
+
+static int translate_show_empire(void)
+{
+    if (!get_joystick_input_for_action(MAPPING_ACTION_SHOW_EMPIRE, &data.show_empire)) {
+        return 0;
+    }
+    if (data.show_empire.state == INPUT_STATE_WENT_DOWN && is_city_window()) {
+        window_empire_show();
+    }
+    return 1;
+}
+
+static int translate_save_file(void)
+{
+    if (!get_joystick_input_for_action(MAPPING_ACTION_SAVE_FILE, &data.save_file)) {
+        return 0;
+    }
+    if (data.save_file.state != INPUT_STATE_WENT_DOWN) {
+        return 1;
+    }
+    if (window_is(WINDOW_FILE_DIALOG)) {
+        // Second press in the dialog confirms, same as pressing Enter
+        keyboard_return();
+    } else if (is_city_window()) {
+        char name[32];
+        time_t now = time(0);
+        struct tm *local = localtime(&now);
+        if (!local || !strftime(name, sizeof(name), "%Y-%m-%d %H-%M-%S", local)) {
+            snprintf(name, sizeof(name), "quicksave");
+        }
+        window_file_dialog_show_with_name(FILE_TYPE_SAVED_GAME, FILE_DIALOG_SAVE, name);
+    }
+    return 1;
 }
 
 static int translate_system_functions(void)
@@ -714,6 +1098,11 @@ int joystick_to_mouse_and_keyboard(void)
         handled |= translate_window_scrolling();
         handled |= translate_map_scrolling();
         handled |= translate_hotkeys();
+        handled |= translate_emulated_keys();
+        handled |= translate_quick_keys();
+        handled |= translate_game_speed_toggle();
+        handled |= translate_show_empire();
+        handled |= translate_save_file();
         handled |= translate_system_functions();
     }
     for (int i = 0; i < MAX_CONTROLLERS; ++i) {
@@ -721,6 +1110,17 @@ int joystick_to_mouse_and_keyboard(void)
     }
     if (handled) {
         mouse_remove_touch();
+        data.cursor.active = 1;
     }
     return handled;
+}
+
+int joystick_is_cursor_active(void)
+{
+    return data.connected_joysticks > 0 && data.cursor.active;
+}
+
+void joystick_deactivate_cursor(void)
+{
+    data.cursor.active = 0;
 }
