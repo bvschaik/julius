@@ -4,6 +4,7 @@
 #include "android/android.h"
 #include "switch/switch.h"
 #include "vita/vita.h"
+#include "wiiu/wiiu.h"
 
 #include "SDL.h"
 

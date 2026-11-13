@@ -6,6 +6,7 @@
 #include "platform/screen.h"
 #include "platform/switch/switch.h"
 #include "platform/vita/vita.h"
+#include "platform/wiiu/wiiu.h"
 
 #include "SDL.h"
 

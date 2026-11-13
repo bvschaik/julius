@@ -12,6 +12,10 @@ case "$BUILD_TARGET" in
 	# As for Vita Make sure that it compiles correctly and runs on a Switch prior to pushing the change
 	docker run -d --name switchdev --workdir /build/git -v "${PWD}:/build/git" devkitpro/devkita64:20231108 tail -f /dev/null
 	;;
+"wiiu")
+	# You can obtain a recent devkitPPC image from https://hub.docker.com/r/devkitpro/devkitppc/tags
+	docker run -d --name wiiudev --workdir /build/git -v "${PWD}:/build/git" devkitpro/devkitppc:20260503 tail -f /dev/null
+	;;
 "android")
 	# Decrypt the key files
 	if [ "$FILE_ENCRYPTION_KEY" ]

@@ -224,20 +224,32 @@ int joystick_remove(int joystick_id)
 void joystick_update_element(int joystick_id, joystick_element element, int element_id, int value1, int value2)
 {
     joystick_info *joystick = get_joystick_by_id(joystick_id);
-    if (!joystick) {
+    if (!joystick || element_id < 0) {
         return;
     }
     switch (element) {
         case JOYSTICK_ELEMENT_BUTTON:
+            if (element_id >= MAX_BUTTONS) {
+                return;
+            }
             joystick->button[element_id] = value1;
             break;
         case JOYSTICK_ELEMENT_HAT:
+            if (element_id >= MAX_HATS) {
+                return;
+            }
             update_hat(&joystick->hat[element_id], value1);
             break;
         case JOYSTICK_ELEMENT_AXIS:
+            if (element_id >= MAX_AXIS) {
+                return;
+            }
             joystick->axis[element_id] = (abs(value1) > AXIS_MAX_THRESHOLD) ? value1 : 0;
             break;
         case JOYSTICK_ELEMENT_TRACKBALL:
+            if (element_id >= MAX_TRACKBALLS) {
+                return;
+            }
             update_trackball(&joystick->trackball[element_id], value1, value2);
             break;
         default:
