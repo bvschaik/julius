@@ -777,7 +777,7 @@ if(APPLE AND NOT ${TARGET_PLATFORM} STREQUAL "ios")
     install(CODE "
         include(BundleUtilities)
         fixup_bundle(${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app \"${LIBS}\" \"${DIRS}\")
-    " BUNDLE DESTINATION ${CMAKE_BINARY_DIR})
+    ")
 
     # perform ad-hoc codesigning
 	set(codesignCommand "codesign --verbose=4 --force --deep --options=runtime --timestamp=none --sign -")
